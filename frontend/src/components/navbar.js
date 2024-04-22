@@ -27,7 +27,7 @@ function Navbar() {
 function Logo() {
   return (
     <div className="navbar-brand">
-      <img src="./icon.jpg" alt="Site logo" />
+      <img src="./assets/images/icon.jpg" alt="Site logo" />
     </div>
   );
 }
