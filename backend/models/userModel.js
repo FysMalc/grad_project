@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 const bcrypt = require('bcrypt');
+
 const validator = require('validator');
 const { generateAccessToken, generateRefreshToken } = require('../services/jwtServices');
 
@@ -18,6 +20,11 @@ const userSchema = new Schema({
 	isAdmin: {
 		type: Boolean,
 		default: false,
+		required: true,
+	},
+	createdAt: {
+		type: Date,
+		default: moment().format('HH:mm:ss DD-MM-YYYY'),
 		required: true,
 	},
 });

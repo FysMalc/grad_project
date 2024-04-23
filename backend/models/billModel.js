@@ -1,34 +1,33 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
+
 const Schema = mongoose.Schema;
 
-const billSchema = new Schema(
-	{
-		table: {
-			type: String,
-			required: true,
-		},
-		orders: [
-			{
-				mealID: {
-					type: mongoose.Schema.Types.ObjectId,
-					required: true,
-					ref: 'meal', // Reference to the Order model
-				},
-				quantity: { type: Number, required: true },
-			},
-		],
-		total: {
-			type: Number,
-			required: true,
-		},
-
-		createdAt: {
-			type: Date,
-			default: Date.now,
-			required: true,
-		},
+const billSchema = new Schema({
+	table: {
+		type: String,
+		required: true,
 	},
-	{ timestamps: true }
-);
+	orders: [
+		{
+			mealID: {
+				type: mongoose.Schema.Types.ObjectId,
+				required: true,
+				ref: 'meal', // Reference to the Order model
+			},
+			quantity: { type: Number, required: true },
+		},
+	],
+	total: {
+		type: Number,
+		required: true,
+	},
+
+	createdAt: {
+		type: Date,
+		default: moment().format('HH:mm:ss DD-MM-YYYY'),
+		required: true,
+	},
+});
 
 module.exports = mongoose.model('bill', billSchema);
