@@ -18,7 +18,12 @@ const ingredientSchema = new Schema(
 			required: true,
 		},
 		unit: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
+			name: {
+				type: String,
+				required: true,
+			},
+			ref: 'unit',
 			required: true,
 		},
 	},

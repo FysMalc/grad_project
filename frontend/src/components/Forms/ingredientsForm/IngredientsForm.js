@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import HeaderContent from '../../HeaderContent/HeaderContent';
 import axios from 'axios';
+import { getUnits } from '../../../services/unitService';
 
 const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 	const [ingredient, setIngredient] = useState(ingredientToEdit || {});
@@ -11,8 +12,23 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 	const [type, setType] = useState('');
 	const [amount, setAmount] = useState('');
 	const [unit, setUnit] = useState('');
+	const [units, setUnits] = useState([]);
 
 	const [check, setCheck] = useState(false);
+
+	useEffect(() => {
+		const fetchUnits = async () => {
+			try {
+				const res = await getUnits();
+				setUnits(res.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		fetchUnits();
+	}, []);
+
 	useEffect(() => {
 		if (ingredientToEdit !== null) {
 			setName(ingredientToEdit.name);
@@ -27,7 +43,6 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 		setName('');
 		setType('');
 		setAmount('');
-		setUnit('');
 	};
 
 	const handleSubmit = async (e) => {
@@ -57,6 +72,7 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 		setCheck(false);
 		resetState();
 	};
+
 	const handleCancel = (e) => {
 		e.preventDefault();
 		setIngredientToEdit(null);
@@ -115,14 +131,15 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 									</div>
 									<div className="form-group">
 										<label htmlFor="ingredient-unit">Đơn vị</label>
-										<input
-											type="text"
-											className="form-control"
-											id="ingredient-unit"
-											placeholder="Đơn vị"
-											onChange={(e) => setUnit(e.target.value)}
-											value={unit}
-										/>
+										<select className="form-control" id="ingredient-unit" onChange={(e) => setUnit(e.target.value)}>
+											{units.map((unit) => {
+												return (
+													<option key={unit._id} value={unit._id}>
+														{unit.name}
+													</option>
+												);
+											})}
+										</select>
 									</div>
 								</div>
 								{/* /.card-body */}
@@ -149,10 +166,10 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 									)}
 									{check && (
 										<div>
-											<button className="btn btn-primary" onClick={handleCancel}>
+											<button className="btn btn-primary" onClick={handleCancel} style={{ float: 'right' }}>
 												Cancel
 											</button>
-											<button className="btn btn-primary" onClick={handleSave} style={{ float: 'right' }}>
+											<button className="btn btn-primary" onClick={handleSave}>
 												Save
 											</button>
 										</div>

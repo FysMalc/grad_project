@@ -13,7 +13,11 @@ const mealSchema = new Schema(
 			{
 				name: { type: String, required: true },
 				amount: { type: Number, required: true },
-				unit: { type: String, required: true },
+				unit: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'unit',
+					required: true,
+				},
 				ingredientId: {
 					type: mongoose.Schema.Types.ObjectId,
 					ref: 'ingredient',

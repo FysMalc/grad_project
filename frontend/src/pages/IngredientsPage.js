@@ -1,11 +1,7 @@
 import { React, useEffect, useState } from 'react';
+import { deleteIngredient, getIngredients } from '../services/ingredientService';
 
-import FoodDetails from '../components/FoodDetails';
 import IngredientsForm from '../components/Forms/ingredientsForm/IngredientsForm';
-import axios from 'axios';
-import { getIngredients } from '../services/ingredientService';
-
-// import IngredientsDetails from '../components/Tables/IngredientsTable';
 
 const IngredientsPage = () => {
 	const [ingredientToEdit, setIngredientToEdit] = useState(null);
@@ -26,17 +22,13 @@ const IngredientsPage = () => {
 		fetchIngredients();
 	}, []);
 
-	useEffect(
-		() => {
-			setFilteredIngredients(
-				ingredients.filter((ingredient) => {
-					return ingredient.name.toLowerCase().includes(searchQuery.toLocaleLowerCase());
-				})
-			);
-		},
-		[searchQuery],
-		[ingredientToEdit]
-	);
+	useEffect(() => {
+		setFilteredIngredients(
+			ingredients.filter((ingredient) => {
+				return ingredient.name.toLowerCase().includes(searchQuery.toLocaleLowerCase());
+			})
+		);
+	}, [searchQuery]);
 
 	const handleSearch = (event) => {
 		setSearchQuery(event.target.value);
@@ -45,6 +37,19 @@ const IngredientsPage = () => {
 	const handleEdit = (event, ingredientId) => {
 		const ingredientToEdit = ingredients.find((ingredient) => ingredient._id === ingredientId);
 		setIngredientToEdit(ingredientToEdit);
+	};
+
+	const handleDelete = async (event, ingredientId) => {
+		const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa nguyên liệu này không?');
+		if (confirmDelete) {
+			try {
+				const res = await deleteIngredient(ingredientId);
+				setFilteredIngredients(ingredients.filter((ingredient) => ingredient._id !== ingredientId));
+				console.log(res);
+			} catch (error) {
+				console.log(error);
+			}
+		}
 	};
 	return (
 		<div>
@@ -90,7 +95,7 @@ const IngredientsPage = () => {
 											<td>{ingredient.name}</td>
 											<td>{ingredient.type}</td>
 											<td>{ingredient.amount}</td>
-											<td>{ingredient.unit}</td>
+											<td>{ingredient.unit.name}</td>
 											<td>{ingredient.createdAt}</td>
 											<td>
 												<button
@@ -100,6 +105,16 @@ const IngredientsPage = () => {
 													}}
 												>
 													Chỉnh sửa
+												</button>
+											</td>
+											<td>
+												<button
+													className="btn btn-block btn-outline-danger"
+													onClick={(event) => {
+														handleDelete(event, ingredient._id);
+													}}
+												>
+													Xoá
 												</button>
 											</td>
 										</tr>

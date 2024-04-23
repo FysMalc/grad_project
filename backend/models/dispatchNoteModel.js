@@ -4,19 +4,26 @@ const Schema = mongoose.Schema;
 
 const dispatchNoteSchema = new Schema(
 	{
-		name: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		type: {
+		nguoi_lap: {
 			type: String,
 			required: true,
 		},
-		amount: {
-			type: Number,
+		nguoi_nhan: {
+			type: String,
 			required: true,
 		},
+		dispatch_list: [
+			{
+				name: { type: String, required: true },
+				amount: { type: Number, required: true },
+				unit: { type: String, required: true },
+				ingredientId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'ingredient',
+					required: true,
+				},
+			},
+		],
 		unit: {
 			type: String,
 			required: true,
