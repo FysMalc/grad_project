@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
-const mealSchema = new Schema({
-	name: {
+const purchaseNoteSchema = new Schema({
+	nguoi_lap: {
 		type: String,
 		required: true,
-		unique: true,
 	},
-	ingredients: [
+	nguoi_nhan: {
+		type: String,
+		required: true,
+	},
+	purchase_list: [
 		{
 			ingredient: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -16,21 +18,13 @@ const mealSchema = new Schema({
 				required: true,
 			},
 			amount: { type: Number, required: true },
-			unit: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'unit',
-				required: true,
-			},
+			unit: { type: String, required: true },
 		},
 	],
-	price: {
-		type: Number,
-		required: true,
-	},
 	createdAt: {
 		type: String,
 		required: true,
 	},
 });
 
-module.exports = mongoose.model('meal', mealSchema);
+module.exports = mongoose.model('purchaseNote', purchaseNoteSchema);

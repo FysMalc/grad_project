@@ -52,7 +52,8 @@ const Menu = ({ history }) => {
 
 						<li className="nav-item">
 							<Link to="/ingredients" className="nav-link">
-								<i className="nav-icon fas fa-list-alt" /> <p> Nguyên liệu</p>
+								<i className="nav-icon fas fa-table" />
+								<p> Nguyên liệu</p>
 							</Link>
 						</li>
 
@@ -60,6 +61,30 @@ const Menu = ({ history }) => {
 							<Link to="/meals" className="nav-link">
 								<i className="nav-icon fas fa-hamburger" /> <p> Danh sách món ăn</p>
 							</Link>
+						</li>
+						<li className="nav-item">
+							<a href="#" className="nav-link ">
+								<i className="nav-icon fas fa-list-alt" />
+								<p>
+									Danh sách phiếu
+									<i className="fas fa-angle-left right" />
+								</p>
+							</a>
+							<ul className="nav nav-treeview">
+								<li className="nav-item">
+									<Link to="/purchase-note" className="nav-link">
+										<i class="far fa-circle nav-icon" /> <p>Phiếu nhập</p>
+									</Link>
+								</li>
+								<li className="nav-item">
+									<Link to="/dispatch-note" className="nav-link">
+										<i class="far fa-circle nav-icon" /> <p>Phiếu xuất</p>
+									</Link>
+								</li>
+							</ul>
+							{/* <Link to="/dispatch-note" className="nav-link">
+								<i className="nav-icon fas fa-table" /> <p>Phiếu nhập</p>
+							</Link> */}
 						</li>
 					</ul>
 				</nav>

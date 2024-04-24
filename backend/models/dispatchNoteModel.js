@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
 const dispatchNoteSchema = new Schema({
@@ -13,19 +12,17 @@ const dispatchNoteSchema = new Schema({
 	},
 	dispatch_list: [
 		{
-			name: { type: String, required: true },
-			amount: { type: Number, required: true },
-			unit: { type: String, required: true },
-			ingredientId: {
+			ingredient: {
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'ingredient',
 				required: true,
 			},
+			amount: { type: Number, required: true },
+			unit: { type: String, required: true },
 		},
 	],
 	createdAt: {
-		type: Date,
-		default: moment().format('HH:mm:ss DD-MM-YYYY'),
+		type: String,
 		required: true,
 	},
 });

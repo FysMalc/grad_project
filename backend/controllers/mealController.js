@@ -1,5 +1,6 @@
 const Meal = require('../models/mealModel');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const getAllMeals = async (req, res) => {
 	const meals = await Meal.find().sort({ createdAt: -1 });
@@ -29,6 +30,7 @@ const createMeal = async (req, res) => {
 
 	const meal = await Meal.findOne({
 		name: name,
+		createdAt: moment().format('HH:mm:ss DD-MM-YYYY'),
 	});
 
 	if (meal) {

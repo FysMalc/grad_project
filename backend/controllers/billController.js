@@ -1,6 +1,7 @@
 const Bill = require('../models/billModel');
 const Meal = require('../models/mealModel');
 const Ingredient = require('../models/ingredientModel');
+const moment = require('moment');
 
 //Get all bills
 const getAllBills = async (req, res) => {
@@ -19,6 +20,7 @@ const createBill = async (req, res) => {
 		const bill = new Bill({
 			table: table,
 			orders: orders,
+			createdAt: moment().format('HH:mm:ss DD-MM-YYYY'),
 		});
 
 		let totalAmount = 0;

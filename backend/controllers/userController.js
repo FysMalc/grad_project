@@ -5,10 +5,10 @@ dotenv.config();
 
 //login
 const loginUser = async (req, res) => {
-	const { email, password } = req.body;
+	const { username, password } = req.body;
 
 	try {
-		const response = await User.login(email, password);
+		const response = await User.login(username, password);
 		const { user, access_token, refresh_token } = response;
 
 		res.cookie('refresh_token', refresh_token, {
@@ -18,7 +18,7 @@ const loginUser = async (req, res) => {
 			path: '/',
 		});
 
-		res.status(200).json({ email, refresh_token });
+		res.status(200).json({ username, refresh_token });
 	} catch (e) {
 		res.status(400).json({ message: e.message });
 	}
@@ -26,10 +26,10 @@ const loginUser = async (req, res) => {
 
 //signup
 const signupUser = async (req, res) => {
-	const { email, password } = req.body;
+	const { username, password } = req.body;
 
 	try {
-		const response = await User.signup(email, password);
+		const response = await User.signup(username, password);
 		const { user, access_token, refresh_token } = response;
 
 		res.cookie('refresh_token', refresh_token, {
@@ -39,7 +39,7 @@ const signupUser = async (req, res) => {
 			path: '/',
 		});
 
-		res.status(200).json({ email, refresh_token });
+		res.status(200).json({ username, refresh_token });
 	} catch (e) {
 		res.status(400).json({ message: e.message });
 	}

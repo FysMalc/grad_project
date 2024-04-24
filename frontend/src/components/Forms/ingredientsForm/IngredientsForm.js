@@ -82,8 +82,6 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 
 	return (
 		<>
-			<HeaderContent name={'Nguyên liệu'} />
-
 			<section className="content">
 				<div className="container-fluid">
 					<div className="row">

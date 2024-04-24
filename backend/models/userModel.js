@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
 const bcrypt = require('bcrypt');
+const moment = require('moment');
 
-const validator = require('validator');
 const { generateAccessToken, generateRefreshToken } = require('../services/jwtServices');
 
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-	email: {
+	username: {
 		type: String,
 		required: true,
 		unique: true,
@@ -24,38 +23,31 @@ const userSchema = new Schema({
 	},
 	createdAt: {
 		type: Date,
-		default: moment().format('HH:mm:ss DD-MM-YYYY'),
 		required: true,
 	},
 });
 
 // static signup method
 
-userSchema.statics.signup = async function (email, password) {
+userSchema.statics.signup = async function (username, password) {
 	//validation
-	if (!email || !password) {
+	if (!username || !password) {
 		throw Error('Tất cả ô không được trống');
 	}
 
-	if (!validator.isEmail(email)) {
-		throw Error('Email không hợp lệ');
-	}
-
-	if (!validator.isStrongPassword(password)) {
-	}
-
-	const exists = await this.findOne({ email });
+	const exists = await this.findOne({ username });
 
 	if (exists) {
-		throw Error('Email already in use');
+		throw Error('username already in use');
 	}
 
 	const salt = await bcrypt.genSalt(10);
 	const hashedPassword = await bcrypt.hash(password, salt);
 
 	const user = await this.create({
-		email,
+		username,
 		password: hashedPassword,
+		createdAt: moment().format('HH:mm:ss DD-MM-YYYY'),
 	});
 
 	const access_token = await generateAccessToken({
@@ -75,15 +67,15 @@ userSchema.statics.signup = async function (email, password) {
 	};
 };
 
-userSchema.statics.login = async function (email, password) {
-	if (!email || !password) {
+userSchema.statics.login = async function (username, password) {
+	if (!username || !password) {
 		throw Error('Tất cả ô không được trống');
 	}
 
-	const user = await this.findOne({ email });
+	const user = await this.findOne({ username });
 
 	if (!user) {
-		throw Error('Email không tồn tại');
+		throw Error('username không tồn tại');
 	}
 
 	const match = await bcrypt.compare(password, user.password);

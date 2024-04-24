@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import { deleteIngredient, getIngredients } from '../services/ingredientService';
 
+import HeaderContent from '../components/HeaderContent/HeaderContent';
 import IngredientsForm from '../components/Forms/ingredientsForm/IngredientsForm';
 
 const IngredientsPage = () => {
@@ -9,16 +10,16 @@ const IngredientsPage = () => {
 	const [filteredIngredients, setFilteredIngredients] = useState([]);
 	const [searchQuery, setSearchQuery] = useState('');
 
+	const fetchIngredients = async () => {
+		try {
+			const response = await getIngredients();
+			setIngredients(response.data);
+			setFilteredIngredients(response.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
 	useEffect(() => {
-		const fetchIngredients = async () => {
-			try {
-				const response = await getIngredients();
-				setIngredients(response.data);
-				setFilteredIngredients(response.data);
-			} catch (error) {
-				console.error(error);
-			}
-		};
 		fetchIngredients();
 	}, []);
 
@@ -44,16 +45,16 @@ const IngredientsPage = () => {
 		if (confirmDelete) {
 			try {
 				const res = await deleteIngredient(ingredientId);
-				setFilteredIngredients(ingredients.filter((ingredient) => ingredient._id !== ingredientId));
-				console.log(res);
+				await fetchIngredients();
 			} catch (error) {
 				console.log(error);
 			}
 		}
 	};
 	return (
-		<div>
-			<IngredientsForm ingredientToEdit={ingredientToEdit} setIngredientToEdit={setIngredientToEdit} />
+		<div className="container-fluid">
+			<HeaderContent name={'Nguyên liệu'} />
+			{/* <IngredientsForm ingredientToEdit={ingredientToEdit} setIngredientToEdit={setIngredientToEdit} /> */}
 			<div className="row">
 				<div className="col-12">
 					<div className="card">

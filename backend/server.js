@@ -9,7 +9,7 @@ const mealRouter = require('./routes/mealRouter');
 const billRouter = require('./routes/billRouter');
 const unitRouter = require('./routes/unitRouter');
 const dispatchNoteRouter = require('./routes/dispatchNoteRouter');
-
+const purchaseNoteRouter = require('./routes/purchaseNoteRouter');
 PORT = process.env.PORT;
 
 //express app
@@ -29,7 +29,8 @@ app.use('/api/user', userRouter);
 app.use('/api/meal', mealRouter);
 app.use('/api/bill', billRouter);
 app.use('/api/unit', unitRouter);
-app.use('/api/dispatchnote', dispatchNoteRouter);
+app.use('/api/dispatch-note', dispatchNoteRouter);
+app.use('/api/purchase-note', purchaseNoteRouter);
 
 mongoose
 	.connect(process.env.MONGO_URI)

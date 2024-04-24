@@ -1,5 +1,6 @@
 const Ingredient = require('../models/ingredientModel');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 // GET all Ingredient
 const getIngredients = async (req, res) => {
@@ -31,6 +32,7 @@ const getIngredient = async (req, res) => {
 // Create a new Ingredient
 const createIngredient = async (req, res) => {
 	const { name, type, amount, unit } = req.body;
+	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 	const ingredient = await Ingredient.findOne({
 		name: name,
 	});
@@ -40,7 +42,7 @@ const createIngredient = async (req, res) => {
 	}
 
 	try {
-		const ingredient = await Ingredient.create({ name, type, amount, unit });
+		const ingredient = await Ingredient.create({ name, type, amount, unit, createdAt });
 		res.status(200).json(ingredient);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
