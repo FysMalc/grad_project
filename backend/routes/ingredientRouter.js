@@ -12,13 +12,13 @@ const router = express.Router();
 router.get('/getAll', getIngredients);
 
 // GET a single Ingredient
-router.get('/:id', getIngredient);
+router.get('/get/:id', getIngredient);
 
 // Create a new Ingredient
 router.post('/create', createIngredient);
 
 // DELETE a Ingredient
-router.delete('/:id', deleteIngredient);
+router.delete('/delete/:id', deleteIngredient);
 
 //  UPDATE an existing Ingredient
 router.patch('/update/:id', updateIngredient);

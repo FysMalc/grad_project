@@ -6,15 +6,15 @@ const router = express.Router();
 router.get('/getAll', mealController.getAllMeals);
 
 // GET a single Meal
-router.get('/:id', mealController.getMeal);
+router.get('/get/:id', mealController.getMeal);
 
 // Create a new Meal
 router.post('/create', mealController.createMeal);
 
 // DELETE a Meal
-router.delete('/:id', mealController.deleteMeal);
+router.delete('/delete/:id', mealController.deleteMeal);
 
 //  UPDATE an existing Meal
-router.patch('/:id', mealController.updateMeal);
+router.patch('/update/:id', mealController.updateMeal);
 
 module.exports = router;

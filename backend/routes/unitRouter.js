@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/getAll', getUnits);
 
 //Get unit by id
-router.get('/:id');
+router.get('/get/:id');
 
 //Create new unit
 router.post('/create', createUnit);

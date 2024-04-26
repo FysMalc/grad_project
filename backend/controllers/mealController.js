@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 const getAllMeals = async (req, res) => {
-	const meals = await Meal.find().sort({ createdAt: -1 });
+	const meals = await Meal.find()
+		.populate('ingredients.ingredient')
+		.populate('ingredients.unit')
+		.sort({ createdAt: -1 });
 
 	res.status(200).json(meals);
 };
@@ -27,10 +30,10 @@ const getMeal = async (req, res) => {
 
 const createMeal = async (req, res) => {
 	const { name, ingredients, price, unit } = req.body;
+	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 
 	const meal = await Meal.findOne({
 		name: name,
-		createdAt: moment().format('HH:mm:ss DD-MM-YYYY'),
 	});
 
 	if (meal) {
@@ -39,7 +42,7 @@ const createMeal = async (req, res) => {
 		});
 	}
 	try {
-		const meal = await Meal.create({ name, ingredients, price, unit });
+		const meal = await Meal.create({ name, ingredients, price, unit, createdAt });
 		res.status(200).json(meal);
 	} catch (e) {
 		res.status(400).json({

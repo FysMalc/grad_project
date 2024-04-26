@@ -6,7 +6,7 @@ const getDisposeNotes = async () => {
 	return res.data;
 };
 
-const getDisposeNote = async () => {
+const getDisposeNote = async (id) => {
 	const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/dispose-note/get/${id}`);
 
 	return res.data;
@@ -17,3 +17,5 @@ const createDisposeNote = async () => {
 
 	return res.data;
 };
+
+export { getDisposeNotes, getDisposeNote, createDisposeNote };

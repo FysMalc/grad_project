@@ -6,7 +6,7 @@ const getUnits = async () => {
 };
 
 const getUnit = async (id) => {
-	const res = await axios.get(`${process.env.REACT_APP_API_URL}/unit/${id}`);
+	const res = await axios.get(`${process.env.REACT_APP_API_URL}/unit/get/${id}`);
 	return res;
 };
 
@@ -16,7 +16,7 @@ const createUnit = async (data) => {
 };
 
 const deleteUnit = async (id, access_token) => {
-	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/unit/${id}`, {
+	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/unit/delete/${id}`, {
 		headers: {
 			token: `Bearer ${access_token}`,
 		},

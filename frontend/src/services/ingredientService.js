@@ -6,7 +6,7 @@ const getIngredients = async () => {
 };
 
 const getIngredient = async (id) => {
-	const res = await axios.get(`${process.env.REACT_APP_API_URL}/ingredient/${id}`);
+	const res = await axios.get(`${process.env.REACT_APP_API_URL}/ingredient/get/${id}`);
 	return res.data;
 };
 
@@ -21,7 +21,7 @@ const updateIngredient = async (id, data) => {
 };
 
 const deleteIngredient = async (id, access_token) => {
-	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/ingredient/${id}`, {
+	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/ingredient/delete/${id}`, {
 		headers: {
 			token: `Bearer ${access_token}`,
 		},

@@ -81,11 +81,21 @@ const Menu = ({ history }) => {
 										<i class="far fa-circle nav-icon" /> <p>Phiếu xuất</p>
 									</Link>
 								</li>
+								<li className="nav-item">
+									<Link to="/dispose-note" className="nav-link">
+										<i class="far fa-circle nav-icon" /> <p>Phiếu huỷ</p>
+									</Link>
+								</li>
 							</ul>
 							{/* <Link to="/dispatch-note" className="nav-link">
 								<i className="nav-icon fas fa-table" /> <p>Phiếu nhập</p>
 							</Link> */}
 						</li>
+						{/* <li className="nav-item">
+							<Link to="/test" className="nav-link">
+								<i className="nav-icon fas fa-hamburger" /> <p> Test</p>
+							</Link>
+						</li> */}
 					</ul>
 				</nav>
 				{/* /.sidebar-menu */}

@@ -3,7 +3,7 @@ const billRouter = require('../controllers/billController');
 const router = express.Router();
 
 // GET all Ingredient
-router.get('/', billRouter.getAllBills);
+router.get('/getAll', billRouter.getAllBills);
 
 // GET a single Ingredient
 // router.get('/:id', getIngredient);

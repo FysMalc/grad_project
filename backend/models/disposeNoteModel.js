@@ -17,6 +17,10 @@ const disposeSchema = new Schema({
 			unit: { type: String, required: true },
 		},
 	],
+	note: {
+		type: String,
+		required: true,
+	},
 	createdAt: {
 		type: String,
 		required: true,

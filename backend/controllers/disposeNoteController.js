@@ -22,10 +22,10 @@ const getDisposeNote = async (req, res) => {
 };
 
 const createDisposeNote = async (req, res) => {
-	const { nguoi_lap, dispose_list } = req.body;
+	const { nguoi_lap, dispose_list, note } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 	try {
-		const disposeNote = await disposeNote.create({ nguoi_lap, dispose_list, createdAt });
+		const disposeNote = await disposeNote.create({ nguoi_lap, dispose_list, note, createdAt });
 		res.status(200).json(disposeNote);
 	} catch (error) {
 		res.status(400).json({ msg: error.message });

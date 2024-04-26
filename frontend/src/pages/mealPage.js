@@ -1,32 +1,32 @@
 import { React, useEffect, useState } from 'react';
-import { deleteIngredient, getIngredients } from '../services/ingredientService';
+import { deleteMeal, getMeals } from '../services/mealService';
 
 import HeaderContent from '../components/HeaderContent/HeaderContent';
-import IngredientsForm from '../components/Forms/ingredientsForm/IngredientsForm';
 
-const IngredientsPage = () => {
-	const [ingredientToEdit, setIngredientToEdit] = useState(null);
-	const [ingredients, setIngredients] = useState([]);
-	const [filteredIngredients, setFilteredIngredients] = useState([]);
+const MealsPage = () => {
+	const [mealToEdit, setMealToEdit] = useState(null);
+	const [meals, setMeals] = useState([]);
+	const [filteredMeals, setFilteredMeals] = useState([]);
 	const [searchQuery, setSearchQuery] = useState('');
 
-	const fetchIngredients = async () => {
+	const fetchMeals = async () => {
 		try {
-			const response = await getIngredients();
-			setIngredients(response.data);
-			setFilteredIngredients(response.data);
+			const data = await getMeals();
+			setMeals(data);
+			setFilteredMeals(data);
+			console.log(data);
 		} catch (error) {
 			console.error(error);
 		}
 	};
 	useEffect(() => {
-		fetchIngredients();
+		fetchMeals();
 	}, []);
 
 	useEffect(() => {
-		setFilteredIngredients(
-			ingredients.filter((ingredient) => {
-				return ingredient.name.toLowerCase().includes(searchQuery.toLocaleLowerCase());
+		setFilteredMeals(
+			meals.filter((meal) => {
+				return meal.name.toLowerCase().includes(searchQuery.toLocaleLowerCase());
 			})
 		);
 	}, [searchQuery]);
@@ -35,17 +35,17 @@ const IngredientsPage = () => {
 		setSearchQuery(event.target.value);
 	};
 
-	const handleEdit = (event, ingredientId) => {
-		const ingredientToEdit = ingredients.find((ingredient) => ingredient._id === ingredientId);
-		setIngredientToEdit(ingredientToEdit);
+	const handleEdit = (event, mealId) => {
+		const mealToEdit = meals.find((meal) => meal._id === mealId);
+		setMealToEdit(mealToEdit);
 	};
 
-	const handleDelete = async (event, ingredientId) => {
-		const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa nguyên liệu này không?');
+	const handleDelete = async (event, mealId) => {
+		const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa món ăn này không?');
 		if (confirmDelete) {
 			try {
-				const res = await deleteIngredient(ingredientId);
-				await fetchIngredients();
+				const res = await deleteMeal(mealId);
+				await fetchMeals();
 			} catch (error) {
 				console.log(error);
 			}
@@ -53,13 +53,13 @@ const IngredientsPage = () => {
 	};
 	return (
 		<div className="container-fluid">
-			<HeaderContent name={'Nguyên liệu'} />
-			{/* <IngredientsForm ingredientToEdit={ingredientToEdit} setIngredientToEdit={setIngredientToEdit} /> */}
+			<HeaderContent name={'Món ăn'} />
+			{/* <MealsForm mealToEdit={mealToEdit} setMealToEdit={setMealToEdit} /> */}
 			<div className="row">
 				<div className="col-12">
 					<div className="card">
 						<div className="card-header">
-							<h3 className="card-title">Danh sách nguyên liệu</h3>
+							<h3 className="card-title">Danh sách món ăn</h3>
 							<div className="card-tools">
 								<div className="input-group input-group-sm" style={{ width: 150 }}>
 									<input
@@ -83,26 +83,31 @@ const IngredientsPage = () => {
 								<thead>
 									<tr>
 										<th>Tên</th>
-										<th>Loại</th>
-										<th>Số lượng</th>
-										<th>Đơn vị</th>
+										<th>Giá</th>
 										<th>Ngày tạo</th>
+										<th>Nguyên liệu</th>
 									</tr>
 								</thead>
 
 								<tbody>
-									{filteredIngredients.map((ingredient) => (
-										<tr key={ingredient._id}>
-											<td>{ingredient.name}</td>
-											<td>{ingredient.type}</td>
-											<td>{ingredient.amount}</td>
-											<td>{ingredient.unit.name}</td>
-											<td>{ingredient.createdAt}</td>
+									{filteredMeals.map((meal) => (
+										<tr key={meal._id}>
+											<td>{meal.name}</td>
+											<td>{meal.price.toLocaleString()} đ</td>
+											<td>{meal.createdAt}</td>
+											<td>
+												{meal.ingredients.map((ingredient) => (
+													<p key={ingredient.ingredient._id}>
+														- {ingredient.ingredient.name} {ingredient.amount} {ingredient.unit.name}
+													</p>
+												))}
+											</td>
+
 											<td>
 												<button
 													className="btn btn-block btn-outline-primary"
 													onClick={(event) => {
-														handleEdit(event, ingredient._id);
+														handleEdit(event, meal._id);
 													}}
 												>
 													Chỉnh sửa
@@ -112,7 +117,7 @@ const IngredientsPage = () => {
 												<button
 													className="btn btn-block btn-outline-danger"
 													onClick={(event) => {
-														handleDelete(event, ingredient._id);
+														handleDelete(event, meal._id);
 													}}
 												>
 													Xoá
@@ -132,4 +137,4 @@ const IngredientsPage = () => {
 	);
 };
 
-export default IngredientsPage;
+export default MealsPage;

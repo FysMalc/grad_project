@@ -34,7 +34,7 @@ const DispatchNotePage = () => {
 									<table id="dispatch" className="table table-bordered table-hover ">
 										<thead>
 											<tr>
-												<th>Người gửi</th>
+												<th>Người lập</th>
 												<th>Người nhận</th>
 												<th>Thời gian tạo</th>
 											</tr>
