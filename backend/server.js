@@ -10,6 +10,7 @@ const billRouter = require('./routes/billRouter');
 const unitRouter = require('./routes/unitRouter');
 const dispatchNoteRouter = require('./routes/dispatchNoteRouter');
 const purchaseNoteRouter = require('./routes/purchaseNoteRouter');
+const disposeNoteRouter = require('./routes/disposeNoteRouter');
 PORT = process.env.PORT;
 
 //express app
@@ -31,6 +32,7 @@ app.use('/api/bill', billRouter);
 app.use('/api/unit', unitRouter);
 app.use('/api/dispatch-note', dispatchNoteRouter);
 app.use('/api/purchase-note', purchaseNoteRouter);
+app.use('/app/dispose-note', disposeNoteRouter);
 
 mongoose
 	.connect(process.env.MONGO_URI)
