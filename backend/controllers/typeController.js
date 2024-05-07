@@ -1,4 +1,5 @@
 const Type = require('../models/typeModel');
+const Ingredient = require('../models/ingredientModel');
 const mongoose = require('mongoose');
 
 // GET all type
@@ -41,6 +42,11 @@ const deleteType = async (req, res) => {
 	const { id } = req.params;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).json({ msg: 'ID không hợp lệ' });
+	}
+
+	const ingredientUsingType = await Ingredient.findOne({ type: id });
+	if (ingredientUsingType) {
+		return res.status(400).json({ msg: 'Loại nguyên liệu đang được sử dụng' });
 	}
 
 	const type = await Type.findOneAndDelete(id);

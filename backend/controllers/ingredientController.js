@@ -1,4 +1,5 @@
 const Ingredient = require('../models/ingredientModel');
+const Meal = require('../models/mealModel');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
@@ -55,7 +56,16 @@ const deleteIngredient = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).json({ msg: 'ID không hợp lệ' });
 	}
-
+	const mealUsingIngredient = await Meal.find({
+		ingredient: {
+			$elemMatch: {
+				ingredient: id,
+			},
+		},
+	});
+	if (mealUsingIngredient) {
+		return res.status(400).json({ msg: 'Món ăn đang được sử dụng' });
+	}
 	const ingredient = await Ingredient.findOneAndDelete(id);
 
 	if (!ingredient) {

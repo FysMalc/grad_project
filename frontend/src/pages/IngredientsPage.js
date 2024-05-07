@@ -181,6 +181,7 @@ const IngredientsPage = () => {
 												console.log(e.target.value);
 											}}
 										>
+											<option key="null">----</option>
 											{types.map((type) => {
 												return (
 													<option key={type._id} value={type._id}>
@@ -200,6 +201,7 @@ const IngredientsPage = () => {
 												console.log(e.target.value);
 											}}
 										>
+											<option key="null">----</option>
 											{units.map((unit) => {
 												return (
 													<option key={unit._id} value={unit._id}>
@@ -303,11 +305,53 @@ const IngredientsPage = () => {
 												</button>
 											</td>
 											<td>
-												<button
+												{/* <button
 													className="btn btn-block btn-outline-danger"
 													onClick={(event) => {
 														handleDelete(event, ingredient._id);
 													}}
+												>
+													Xoá
+												</button> */}
+												<div class="modal fade" id="modal-default">
+													<div className="modal-dialog">
+														<div className="modal-content">
+															<div className="modal-header">
+																<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+																<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">×</span>
+																</button>
+															</div>
+															<div className="modal-body">
+																<p>Bạn có muốn xoá nguyên liệu này?</p>
+															</div>
+															<div className="modal-footer justify-content-between">
+																<button type="button" className="btn btn-danger" data-dismiss="modal">
+																	huỷ
+																</button>
+																<button
+																	type="button"
+																	className="btn  btn-primary"
+																	onClick={(event) => handleDelete(event, type._id)}
+																	data-dismiss="modal"
+																	data-toggle="modal"
+																	data-target="#error-modal"
+																>
+																	Tiếp tục
+																</button>
+															</div>
+														</div>
+														{/* /.modal-content */}
+													</div>
+												</div>
+
+												{/* /.modal-dialog */}
+
+												<button
+													type="button"
+													className="btn btn-block btn-outline-danger"
+													data-toggle="modal"
+													data-target="#modal-default"
 												>
 													Xoá
 												</button>
@@ -316,6 +360,26 @@ const IngredientsPage = () => {
 									))}
 								</tbody>
 							</table>
+							<div class="modal fade" id="error-modal">
+								<div className="modal-dialog">
+									<div className="modal-content">
+										<div className="modal-header">
+											<h4 className="modal-title">Lỗi</h4>
+											<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">×</span>
+											</button>
+										</div>
+										<div className="modal-body" id="error-modal-body">
+											Loại nguyên liệu đang được sử dụng
+										</div>
+										<div className="modal-footer justify-content-between">
+											<button type="button" className="btn btn-danger" data-dismiss="modal">
+												Close
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						{/* /.card-body */}
 					</div>

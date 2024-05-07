@@ -1,4 +1,5 @@
 const Unit = require('../models/unitModel');
+const Ingredient = require('../models/ingredientModel');
 const mongoose = require('mongoose');
 
 // GET all Ingredient
@@ -40,9 +41,14 @@ const deleteUnit = async (req, res) => {
 		return res.status(400).json({ msg: 'ID không hợp lệ' });
 	}
 
+	const ingredientUsingUnit = await Ingredient.findOne({ unit: id });
+
+	if (ingredientUsingUnit) {
+		return res.status(400).json({ msg: 'Đơn vị đang được sử dụng' });
+	}
 	const unit = await Unit.findOneAndDelete(id);
 
-	if (unit) return res.status(404).json({ msg: 'Đơn vị không tồn tại' });
+	if (!unit) return res.status(404).json({ msg: 'Đơn vị không tồn tại' });
 	res.status(200).json(unit);
 };
 

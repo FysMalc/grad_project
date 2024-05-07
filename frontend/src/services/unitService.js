@@ -16,12 +16,17 @@ const createUnit = async (data) => {
 };
 
 const deleteUnit = async (id, access_token) => {
-	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/unit/delete/${id}`, {
-		headers: {
-			token: `Bearer ${access_token}`,
-		},
-	});
-	return res;
+	try {
+		const res = await axios.delete(`${process.env.REACT_APP_API_URL}/unit/delete/${id}`, {
+			headers: {
+				token: `Bearer ${access_token}`,
+			},
+		});
+		return res;
+	} catch (error) {
+		console.log(error.response.data.msg);
+		// return error.response.data.msg;
+	}
 };
 
 export { getUnits, getUnit, createUnit, deleteUnit };

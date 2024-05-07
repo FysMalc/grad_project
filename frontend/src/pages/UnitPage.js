@@ -59,14 +59,11 @@ const UnitsPage = () => {
 	};
 
 	const handleDelete = async (event, unitId) => {
-		const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa đơn vị này không?');
-		if (confirmDelete) {
-			try {
-				const res = await deleteUnit(unitId);
-				await fetchUnits();
-			} catch (error) {
-				console.log(error);
-			}
+		try {
+			const res = await deleteUnit(unitId);
+			await fetchUnits();
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -176,12 +173,54 @@ const UnitsPage = () => {
 												</button>
 											</td> */}
 											<td>
-												<button
+												{/* <button
 													className="btn btn-block btn-outline-danger"
 													style={{ float: 'right' }}
 													onClick={(event) => {
 														handleDelete(event, unit._id);
 													}}
+												>
+													Xoá
+												</button> */}
+												<div class="modal fade" id="modal-default">
+													<div className="modal-dialog">
+														<div className="modal-content">
+															<div className="modal-header">
+																<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+																<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">×</span>
+																</button>
+															</div>
+															<div className="modal-body">
+																<p>Bạn có muốn xoá đơn vị này?</p>
+															</div>
+															<div className="modal-footer justify-content-between">
+																<button type="button" className="btn btn-danger" data-dismiss="modal">
+																	huỷ
+																</button>
+																<button
+																	type="button"
+																	className="btn  btn-primary"
+																	onClick={(event) => handleDelete(event, unit._id)}
+																	data-dismiss="modal"
+																	data-toggle="modal"
+																	data-target="#error-modal"
+																>
+																	Tiếp tục
+																</button>
+															</div>
+														</div>
+														{/* /.modal-content */}
+													</div>
+												</div>
+
+												{/* /.modal-dialog */}
+
+												<button
+													type="button"
+													className="btn btn-block btn-outline-danger"
+													data-toggle="modal"
+													data-target="#modal-default"
 												>
 													Xoá
 												</button>
@@ -190,6 +229,26 @@ const UnitsPage = () => {
 									))}
 								</tbody>
 							</table>
+							<div class="modal fade" id="error-modal">
+								<div className="modal-dialog">
+									<div className="modal-content">
+										<div className="modal-header">
+											<h4 className="modal-title">Lỗi</h4>
+											<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">×</span>
+											</button>
+										</div>
+										<div className="modal-body" id="error-modal-body">
+											Đơn vị đang được sử dụng
+										</div>
+										<div className="modal-footer justify-content-between">
+											<button type="button" className="btn btn-danger" data-dismiss="modal">
+												Close
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						{/* /.card-body */}
 					</div>
