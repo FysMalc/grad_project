@@ -4,7 +4,7 @@ const moment = require('moment');
 
 // GET all Ingredient
 const getIngredients = async (req, res) => {
-	const ingredients = await Ingredient.find({}).populate('unit').sort({ createdAt: -1 });
+	const ingredients = await Ingredient.find({}).populate('unit').populate('type').sort({ createdAt: -1 });
 
 	res.status(200).json(ingredients);
 };

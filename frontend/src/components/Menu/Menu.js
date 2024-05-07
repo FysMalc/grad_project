@@ -63,8 +63,18 @@ const Menu = ({ history }) => {
 							</Link>
 						</li>
 						<li className="nav-item">
+							<Link to="/units" className="nav-link">
+								<i className="nav-icon fas fa-list-alt" /> <p> Đơn vị</p>
+							</Link>
+						</li>
+						<li className="nav-item">
+							<Link to="/types" className="nav-link">
+								<i className="nav-icon fas fa-list-alt" /> <p> Loại</p>
+							</Link>
+						</li>
+						<li className="nav-item">
 							<a href="#" className="nav-link ">
-								<i className="nav-icon fas fa-list-alt" />
+								<i className="nav-icon fas fa-file-alt" />
 								<p>
 									Danh sách phiếu
 									<i className="fas fa-angle-left right" />
@@ -73,17 +83,17 @@ const Menu = ({ history }) => {
 							<ul className="nav nav-treeview">
 								<li className="nav-item">
 									<Link to="/purchase-note" className="nav-link">
-										<i class="far fa-circle nav-icon" /> <p>Phiếu nhập</p>
+										<i className="far fa-circle nav-icon" /> <p>Phiếu nhập</p>
 									</Link>
 								</li>
 								<li className="nav-item">
 									<Link to="/dispatch-note" className="nav-link">
-										<i class="far fa-circle nav-icon" /> <p>Phiếu xuất</p>
+										<i className="far fa-circle nav-icon" /> <p>Phiếu xuất</p>
 									</Link>
 								</li>
 								<li className="nav-item">
 									<Link to="/dispose-note" className="nav-link">
-										<i class="far fa-circle nav-icon" /> <p>Phiếu huỷ</p>
+										<i className="far fa-circle nav-icon" /> <p>Phiếu huỷ</p>
 									</Link>
 								</li>
 							</ul>

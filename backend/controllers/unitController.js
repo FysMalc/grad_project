@@ -42,7 +42,7 @@ const deleteUnit = async (req, res) => {
 
 	const unit = await Unit.findOneAndDelete(id);
 
-	if (unit) return res.status(404).json({ msg: 'Nguyên liệu không tồn tại' });
+	if (unit) return res.status(404).json({ msg: 'Đơn vị không tồn tại' });
 	res.status(200).json(unit);
 };
 

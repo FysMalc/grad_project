@@ -34,7 +34,7 @@ const PurchaseNotePage = () => {
 									<table id="purchase" className="table table-bordered table-hover ">
 										<thead>
 											<tr>
-												<th>Người tạo</th>
+												<th>Người lập</th>
 												<th>Người nhận</th>
 												<th>Thời gian tạo</th>
 											</tr>

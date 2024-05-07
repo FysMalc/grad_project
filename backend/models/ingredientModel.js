@@ -9,7 +9,8 @@ const ingredientSchema = new Schema({
 		unique: true,
 	},
 	type: {
-		type: String,
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'type',
 		required: true,
 	},
 	amount: {

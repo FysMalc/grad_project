@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import HeaderContent from '../../HeaderContent/HeaderContent';
 import axios from 'axios';
+import { getTypes } from '../../../services/typeService';
 import { getUnits } from '../../../services/unitService';
 
 const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
@@ -13,7 +14,7 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 	const [amount, setAmount] = useState('');
 	const [unit, setUnit] = useState('');
 	const [units, setUnits] = useState([]);
-
+	const [types, setTypes] = useState([]);
 	const [check, setCheck] = useState(false);
 
 	useEffect(() => {
@@ -26,7 +27,16 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 			}
 		};
 
+		const fetchTypes = async () => {
+			try {
+				const res = await getTypes();
+				setTypes(res.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
 		fetchUnits();
+		fetchTypes();
 	}, []);
 
 	useEffect(() => {
@@ -41,7 +51,6 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 
 	const resetState = () => {
 		setName('');
-		setType('');
 		setAmount('');
 	};
 
@@ -49,6 +58,7 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 		e.preventDefault();
 
 		const ingredient = { name, type, amount, unit };
+		console.log(ingredient);
 
 		try {
 			const res = await createIngredient(ingredient);
@@ -106,17 +116,6 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 										/>
 									</div>
 									<div className="form-group">
-										<label htmlFor="ingredient-type">Loại</label>
-										<input
-											type="text"
-											className="form-control"
-											id="ingredient-type"
-											placeholder="Loại"
-											onChange={(e) => setType(e.target.value)}
-											value={type}
-										/>
-									</div>
-									<div className="form-group">
 										<label htmlFor="ingredient-amount">Số lượng</label>
 										<input
 											type="text"
@@ -128,8 +127,34 @@ const IngredientsForm = ({ ingredientToEdit, setIngredientToEdit }) => {
 										/>
 									</div>
 									<div className="form-group">
+										<label htmlFor="ingredient-type">Loại</label>
+										<select
+											className="form-control"
+											id="ingredient-type"
+											onChange={(e) => {
+												setType(e.target.value);
+												console.log(e.target.value);
+											}}
+										>
+											{types.map((type) => {
+												return (
+													<option key={type._id} value={type._id}>
+														{type.name}
+													</option>
+												);
+											})}
+										</select>
+									</div>
+									<div className="form-group">
 										<label htmlFor="ingredient-unit">Đơn vị</label>
-										<select className="form-control" id="ingredient-unit" onChange={(e) => setUnit(e.target.value)}>
+										<select
+											className="form-control"
+											id="ingredient-unit"
+											onChange={(e) => {
+												setUnit(e.target.value);
+												console.log(e.target.value);
+											}}
+										>
 											{units.map((unit) => {
 												return (
 													<option key={unit._id} value={unit._id}>
