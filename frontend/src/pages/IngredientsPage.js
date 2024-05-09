@@ -123,14 +123,11 @@ const IngredientsPage = () => {
 	};
 
 	const handleDelete = async (event, ingredientId) => {
-		const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa nguyên liệu này không?');
-		if (confirmDelete) {
-			try {
-				const res = await deleteIngredient(ingredientId);
-				await fetchIngredients();
-			} catch (error) {
-				console.log(error);
-			}
+		try {
+			const res = await deleteIngredient(ingredientId);
+			await fetchIngredients();
+		} catch (error) {
+			console.log(error);
 		}
 	};
 	return (
@@ -296,7 +293,8 @@ const IngredientsPage = () => {
 											<td>{ingredient.createdAt}</td>
 											<td>
 												<button
-													className="btn btn-block btn-outline-primary"
+													className="btn  btn-outline-primary"
+													style={{ float: 'right' }}
 													onClick={(event) => {
 														handleEdit(event, ingredient._id);
 													}}
@@ -331,11 +329,11 @@ const IngredientsPage = () => {
 																</button>
 																<button
 																	type="button"
-																	className="btn  btn-primary"
-																	onClick={(event) => handleDelete(event, type._id)}
+																	className="btn btn-primary"
+																	onClick={(event) => handleDelete(event, ingredient._id)}
 																	data-dismiss="modal"
-																	data-toggle="modal"
-																	data-target="#error-modal"
+																	// data-toggle="modal"
+																	// data-target="#error-modal"
 																>
 																	Tiếp tục
 																</button>
@@ -349,9 +347,10 @@ const IngredientsPage = () => {
 
 												<button
 													type="button"
-													className="btn btn-block btn-outline-danger"
+													className="btn btn-outline-danger"
 													data-toggle="modal"
 													data-target="#modal-default"
+													style={{ float: 'right' }}
 												>
 													Xoá
 												</button>
@@ -370,7 +369,7 @@ const IngredientsPage = () => {
 											</button>
 										</div>
 										<div className="modal-body" id="error-modal-body">
-											Loại nguyên liệu đang được sử dụng
+											Nguyên liệu đang được sử dụng
 										</div>
 										<div className="modal-footer justify-content-between">
 											<button type="button" className="btn btn-danger" data-dismiss="modal">

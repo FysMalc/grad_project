@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import { createType, deleteType, getTypes } from '../services/typeService';
 
+import $ from 'jquery';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
 
 // import TypesForm from '../components/Forms/typesForm/TypesForm';
@@ -12,6 +13,8 @@ const TypesPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [name, setName] = useState('');
 	const [check, setCheck] = useState(false);
+	const [deleteTypeId, setDeletTypeId] = useState(null);
+	const [errorModalOpen, setErrorModalOpen] = useState(false);
 
 	const fetchTypes = async () => {
 		try {
@@ -64,6 +67,7 @@ const TypesPage = () => {
 			await fetchTypes();
 		} catch (error) {
 			console.log(error);
+			setErrorModalOpen(!errorModalOpen);
 		}
 	};
 
@@ -163,7 +167,7 @@ const TypesPage = () => {
 										<tr key={type._id}>
 											<td>{type.name}</td>
 											{/* <td>{type.createdAt}</td> */}
-											<td>
+											{/* <td>
 												<button
 													className="btn btn-block btn-outline-primary"
 													onClick={(event) => {
@@ -172,7 +176,7 @@ const TypesPage = () => {
 												>
 													Chỉnh sửa
 												</button>
-											</td>
+											</td> */}
 											<td>
 												{/* <button
 													className="btn btn-block btn-outline-danger"
@@ -202,10 +206,10 @@ const TypesPage = () => {
 																<button
 																	type="button"
 																	className="btn  btn-primary"
-																	onClick={(event) => handleDelete(event, type._id)}
+																	onClick={(event) => handleDelete(event, deleteTypeId)}
 																	data-dismiss="modal"
 																	data-toggle="modal"
-																	data-target="#error-modal"
+																	data-target={`${errorModalOpen ? '#error-modal' : ''} `}
 																>
 																	Tiếp tục
 																</button>
@@ -219,9 +223,11 @@ const TypesPage = () => {
 
 												<button
 													type="button"
-													className="btn btn-block btn-outline-danger"
+													style={{ float: 'right' }}
+													className="btn  btn-outline-danger"
 													data-toggle="modal"
 													data-target="#modal-default"
+													onClick={(event) => setDeletTypeId(type._id)}
 												>
 													Xoá
 												</button>
@@ -230,7 +236,8 @@ const TypesPage = () => {
 									))}
 								</tbody>
 							</table>
-							<div class="modal fade" id="error-modal">
+
+							<div className="modal fade" id="error-modal">
 								<div className="modal-dialog">
 									<div className="modal-content">
 										<div className="modal-header">

@@ -45,13 +45,13 @@ const deleteType = async (req, res) => {
 	}
 
 	const ingredientUsingType = await Ingredient.findOne({ type: id });
-	if (ingredientUsingType) {
+	if (ingredientUsingType !== null) {
 		return res.status(400).json({ msg: 'Loại nguyên liệu đang được sử dụng' });
 	}
 
-	const type = await Type.findOneAndDelete(id);
+	const type = await Type.findByIdAndDelete(id);
 
-	if (type) return res.status(404).json({ msg: 'Loại nguyên liệu không tồn tại' });
+	if (!type) return res.status(404).json({ msg: 'Loại nguyên liệu không tồn tại' });
 	res.status(200).json(type);
 };
 

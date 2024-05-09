@@ -21,12 +21,16 @@ const updateIngredient = async (id, data) => {
 };
 
 const deleteIngredient = async (id, access_token) => {
-	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/ingredient/delete/${id}`, {
-		headers: {
-			token: `Bearer ${access_token}`,
-		},
-	});
-	return res.data;
+	try {
+		const res = await axios.delete(`${process.env.REACT_APP_API_URL}/ingredient/delete/${id}`, {
+			headers: {
+				token: `Bearer ${access_token}`,
+			},
+		});
+		return res;
+	} catch (error) {
+		console.log(error.response.data.msg);
+	}
 };
 
 export { getIngredients, getIngredient, createIngredient, updateIngredient, deleteIngredient };

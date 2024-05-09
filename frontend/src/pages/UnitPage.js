@@ -12,11 +12,13 @@ const UnitsPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [name, setName] = useState('');
 	const [check, setCheck] = useState(false);
+	const [deleteUnitId, setDeleteUnitId] = useState(null);
 
 	const fetchUnits = async () => {
 		try {
 			const response = await getUnits();
 			setUnits(response.data);
+			console.log(units);
 			setFilteredUnits(response.data);
 		} catch (error) {
 			console.error(error);
@@ -51,6 +53,7 @@ const UnitsPage = () => {
 			console.error(error);
 		}
 		fetchUnits();
+		console.log(units);
 	};
 
 	const handleEdit = (event, unitId) => {
@@ -70,6 +73,11 @@ const UnitsPage = () => {
 	const resetState = () => {
 		setName('');
 	};
+
+	const setDeleteId = (unitId) => {
+		setDeleteId(unitId);
+	};
+
 	return (
 		<div className="container-fluid">
 			<HeaderContent name={'Đơn vị'} />
@@ -158,8 +166,8 @@ const UnitsPage = () => {
 								</thead>
 
 								<tbody>
-									{filteredUnits.map((unit) => (
-										<tr key={unit._id}>
+									{filteredUnits.map((unit, index) => (
+										<tr key={index}>
 											<td>{unit.name}</td>
 											{/* <td>{unit.createdAt}</td> */}
 											{/* <td>
@@ -201,10 +209,8 @@ const UnitsPage = () => {
 																<button
 																	type="button"
 																	className="btn  btn-primary"
-																	onClick={(event) => handleDelete(event, unit._id)}
+																	onClick={(event) => handleDelete(event, deleteUnitId)}
 																	data-dismiss="modal"
-																	data-toggle="modal"
-																	data-target="#error-modal"
 																>
 																	Tiếp tục
 																</button>
@@ -221,6 +227,7 @@ const UnitsPage = () => {
 													className="btn btn-block btn-outline-danger"
 													data-toggle="modal"
 													data-target="#modal-default"
+													onClick={(event) => setDeleteUnitId(unit._id)}
 												>
 													Xoá
 												</button>

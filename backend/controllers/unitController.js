@@ -37,19 +37,22 @@ const createUnit = async (req, res) => {
 
 const deleteUnit = async (req, res) => {
 	const { id } = req.params;
+	console.log(id);
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).json({ msg: 'ID không hợp lệ' });
 	}
-
-	const ingredientUsingUnit = await Ingredient.findOne({ unit: id });
-
-	if (ingredientUsingUnit) {
-		return res.status(400).json({ msg: 'Đơn vị đang được sử dụng' });
+	try {
+		const ingredientUsingUnit = await Ingredient.findOne({ unit: id });
+		if (ingredientUsingUnit !== null) {
+			return res.status(400).json(ingredientUsingUnit);
+		}
+	} catch (error) {
+		return res.status(400).json({ msg: error.message });
 	}
-	const unit = await Unit.findOneAndDelete(id);
+	const unit = await Unit.findByIdAndDelete(id);
 
 	if (!unit) return res.status(404).json({ msg: 'Đơn vị không tồn tại' });
-	res.status(200).json(unit);
+	return res.status(200).json(unit);
 };
 
 module.exports = {

@@ -29,7 +29,7 @@ const getMeal = async (req, res) => {
 };
 
 const createMeal = async (req, res) => {
-	const { name, ingredients, price, unit } = req.body;
+	const { name, ingredients, price } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 
 	const meal = await Meal.findOne({
@@ -42,7 +42,7 @@ const createMeal = async (req, res) => {
 		});
 	}
 	try {
-		const meal = await Meal.create({ name, ingredients, price, unit, createdAt });
+		const meal = await Meal.create({ name, ingredients, price, createdAt });
 		res.status(200).json(meal);
 	} catch (e) {
 		res.status(400).json({
@@ -58,7 +58,7 @@ const deleteMeal = async (req, res) => {
 		return res.status(404).send('ID không hợp lệ!');
 	}
 
-	const meal = await Meal.findOneAndDelete(id);
+	const meal = await Meal.findByIdAndDelete(id);
 	if (!meal) {
 		return res.status(404).send('Không tìm thấy món ăn này!');
 	}
@@ -73,7 +73,7 @@ const updateMeal = async (req, res) => {
 		return res.status(404).send('ID không hợp lệ!');
 	}
 
-	const meal = await Meal.findByOneAndUpdate(id);
+	const meal = await Meal.findByIdAndUpdate(id);
 	if (!meal) {
 		return res.status(404).send('Không tìm thấy món ăn này!');
 	}

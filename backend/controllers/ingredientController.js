@@ -5,7 +5,7 @@ const moment = require('moment');
 
 // GET all Ingredient
 const getIngredients = async (req, res) => {
-	const ingredients = await Ingredient.find({}).populate('unit').populate('type').sort({ createdAt: -1 });
+	const ingredients = await Ingredient.find({}).populate('unit').populate('type').sort({ name: -1 });
 
 	res.status(200).json(ingredients);
 };
@@ -63,10 +63,11 @@ const deleteIngredient = async (req, res) => {
 			},
 		},
 	});
-	if (mealUsingIngredient) {
+
+	if (mealUsingIngredient !== null) {
 		return res.status(400).json({ msg: 'Món ăn đang được sử dụng' });
 	}
-	const ingredient = await Ingredient.findOneAndDelete(id);
+	const ingredient = await Ingredient.findByIdAndDelete(id);
 
 	if (!ingredient) {
 		return res.status(404).json({ msg: 'Nguyên liệu không tồn tại' });
