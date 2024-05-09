@@ -10,9 +10,9 @@ const getDispatchNote = async (id) => {
 	return res.data;
 };
 
-const createDispatchNote = async () => {
-	const res = await axios.post(`${process.env.REACT_APP_API_URL}/dispatch-note/create`);
-	return res.data;
+const createDispatchNote = async (data) => {
+	const res = await axios.post(`${process.env.REACT_APP_API_URL}/dispatch-note/create`, data);
+	return res;
 };
 
 export { getDispatchNotes, getDispatchNote, createDispatchNote };

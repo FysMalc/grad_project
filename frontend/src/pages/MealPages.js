@@ -11,8 +11,9 @@ const MealsPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [name, setName] = useState('');
 	const [ingredientsList, setIngredientsList] = useState([]);
-	const [price, setPrice] = useState(0);
+	const [price, setPrice] = useState(null);
 	const [check, setCheck] = useState(false);
+	const [cancel, setCancel] = useState(false);
 
 	const fetchMeals = async () => {
 		try {
@@ -109,11 +110,17 @@ const MealsPage = () => {
 		setMealToEdit(null);
 		resetState();
 		setCheck(false);
+		setCancel(false);
 	};
 
 	const resetState = () => {
 		setName('');
 		setPrice('');
+		const ingredientContainer = document.getElementById('ingredientContainer');
+		const ingredientRows = ingredientContainer.getElementsByClassName('ingredientRow');
+		while (ingredientRows.length > 0) {
+			ingredientContainer.removeChild(ingredientRows[0]);
+		}
 	};
 
 	const handleSearch = (event) => {
@@ -235,7 +242,11 @@ const MealsPage = () => {
 											className="form-control"
 											id="meal-name"
 											placeholder="Tên nguyên liệu"
-											onChange={(e) => setName(e.target.value)}
+											onChange={(e) => {
+												setName(e.target.value);
+												if (e.target.value.length !== 0) setCancel(true);
+												else setCancel(false);
+											}}
 											value={mealToEdit ? mealToEdit.name : name}
 										/>
 									</div>
@@ -284,9 +295,13 @@ const MealsPage = () => {
 										<input
 											type="text"
 											className="form-control"
-											id="meal-amount"
-											placeholder="Số lượng"
-											onChange={(e) => setPrice(e.target.value)}
+											id="meal-price"
+											placeholder="Giá"
+											onChange={(e) => {
+												setPrice(e.target.value);
+												if (e.target.value.length !== 0) setCancel(true);
+												else setCancel(false);
+											}}
 											value={mealToEdit ? mealToEdit.price : price}
 										/>
 									</div>
@@ -309,9 +324,16 @@ const MealsPage = () => {
 										)} */}
 
 									{!check && (
-										<button className="btn btn-primary" onClick={handleSubmit}>
-											Submit
-										</button>
+										<>
+											<button className="btn btn-primary" onClick={handleSubmit}>
+												Submit
+											</button>
+											{cancel && (
+												<button className="btn btn-danger" onClick={handleCancel} style={{ float: 'right' }}>
+													cancel
+												</button>
+											)}
+										</>
 									)}
 									{check && (
 										<div>

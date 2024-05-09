@@ -93,7 +93,7 @@ const Menu = ({ history }) => {
 								</li>
 								<li className="nav-item">
 									<Link to="/dispose-note" className="nav-link">
-										<i className="far fa-circle nav-icon" /> <p>Phiếu huỷ</p>
+										<i className="far fa-circle nav-icon" /> <p>Phiếu thanh lý</p>
 									</Link>
 								</li>
 							</ul>

@@ -12,10 +12,10 @@ const getDisposeNote = async (id) => {
 	return res.data;
 };
 
-const createDisposeNote = async () => {
-	const res = await axios.post(`${process.env.REACT_APP_API_URL}/dispose-note/create`);
+const createDisposeNote = async (data) => {
+	const res = await axios.post(`${process.env.REACT_APP_API_URL}/dispose-note/create`, data);
 
-	return res.data;
+	return res;
 };
 
 export { getDisposeNotes, getDisposeNote, createDisposeNote };

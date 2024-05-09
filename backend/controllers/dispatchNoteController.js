@@ -4,7 +4,10 @@ const moment = require('moment');
 
 //Get all Note
 const getDispatchNotes = async (req, res) => {
-	const dispatchNotes = await DispatchNote.find({}).populate('ingredient').sort({ createdAt: -1 });
+	const dispatchNotes = await DispatchNote.find({})
+		.populate('dispatch_list.ingredient')
+		.populate('dispatch_list.unit')
+		.sort({ createdAt: -1 });
 
 	res.status(200).json(dispatchNotes);
 };
@@ -22,10 +25,10 @@ const getDispatchNote = async (req, res) => {
 };
 
 const createDispatchNote = async (req, res) => {
-	const { nguoi_lap, nguoi_nhan, dispatch_list } = req.body;
+	const { creator, receiver, dispatch_list, note } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 	try {
-		const dispatchNote = await DispatchNote.create({ nguoi_lap, nguoi_nhan, dispatch_list, createdAt });
+		const dispatchNote = await DispatchNote.create({ creator, receiver, dispatch_list, note, createdAt });
 		res.status(200).json(dispatchNote);
 	} catch (error) {
 		res.status(400).json({ msg: error.message });

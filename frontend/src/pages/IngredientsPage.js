@@ -332,6 +332,7 @@ const IngredientsPage = () => {
 																	className="btn btn-primary"
 																	onClick={(event) => handleDelete(event, ingredient._id)}
 																	data-dismiss="modal"
+
 																	// data-toggle="modal"
 																	// data-target="#error-modal"
 																>

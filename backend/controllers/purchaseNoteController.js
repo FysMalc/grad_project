@@ -4,7 +4,11 @@ const moment = require('moment');
 
 //Get all Note
 const getPurchaseNotes = async (req, res) => {
-	const purchaseNotes = await purchaseNote.find({}).sort({ createdAt: -1 });
+	const purchaseNotes = await purchaseNote
+		.find({})
+		.populate('purchase_list.ingredient')
+		.populate('purchase_list.unit')
+		.sort({ createdAt: -1 });
 
 	res.status(200).json(purchaseNotes);
 };
@@ -16,16 +20,16 @@ const getPurchaseNote = async (req, res) => {
 	}
 	const purchaseNote = await purchaseNote.findById(req.params.id);
 
-	if (!purchaseNote) return res.status(404).json({ msg: 'Phiếu xuất không tồn tại' });
+	if (!purchaseNote) return res.status(404).json({ msg: 'Phiếu nhập không tồn tại' });
 
 	res.status(200).json(purchaseNote);
 };
 
 const createPurchaseNote = async (req, res) => {
-	const { nguoi_lap, nguoi_nhan, purchase_list } = req.body;
+	const { creator, receiver, purchase_list, note } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 	try {
-		const purchaseNote = await purchaseNote.create({ nguoi_lap, nguoi_nhan, purchase_list, createdAt });
+		const purchaseNote = await purchaseNote.create({ creator, receiver, purchase_list, note, createdAt });
 		res.status(200).json(purchaseNote);
 	} catch (error) {
 		res.status(400).json({ msg: error.message });

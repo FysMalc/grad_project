@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const purchaseNoteSchema = new Schema({
-	nguoi_lap: {
+	creator: {
 		type: String,
 		required: true,
 	},
-	nguoi_nhan: {
+	receiver: {
 		type: String,
 		required: true,
 	},
@@ -18,9 +18,16 @@ const purchaseNoteSchema = new Schema({
 				required: true,
 			},
 			amount: { type: Number, required: true },
-			unit: { type: String, required: true },
+			unit: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'unit',
+				required: true,
+			},
 		},
 	],
+	note: {
+		type: String,
+	},
 	createdAt: {
 		type: String,
 		required: true,
