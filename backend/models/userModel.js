@@ -22,7 +22,7 @@ const userSchema = new Schema({
 		required: true,
 	},
 	createdAt: {
-		type: Date,
+		type: String,
 		required: true,
 	},
 });
@@ -43,20 +43,20 @@ userSchema.statics.signup = async function (username, password) {
 
 	const salt = await bcrypt.genSalt(10);
 	const hashedPassword = await bcrypt.hash(password, salt);
-
+	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 	const user = await this.create({
 		username,
 		password: hashedPassword,
-		createdAt: moment().format('HH:mm:ss DD-MM-YYYY'),
+		createdAt: createdAt,
 	});
 
 	const access_token = await generateAccessToken({
-		id: user.id,
+		id: user._id,
 		isAdmin: user.isAdmin,
 	});
 
 	const refresh_token = await generateRefreshToken({
-		id: user.id,
+		id: user._id,
 		isAdmin: user.isAdmin,
 	});
 
@@ -68,8 +68,11 @@ userSchema.statics.signup = async function (username, password) {
 };
 
 userSchema.statics.login = async function (username, password) {
-	if (!username || !password) {
-		throw Error('Tất cả ô không được trống');
+	if (!username) {
+		throw Error('username không được trống');
+	}
+	if (!password) {
+		throw Error('password không được trống');
 	}
 
 	const user = await this.findOne({ username });
@@ -85,12 +88,12 @@ userSchema.statics.login = async function (username, password) {
 	}
 
 	const access_token = await generateAccessToken({
-		id: user.id,
+		id: user._id,
 		isAdmin: user.isAdmin,
 	});
 
 	const refresh_token = await generateRefreshToken({
-		id: user.id,
+		id: user._id,
 		isAdmin: user.isAdmin,
 	});
 

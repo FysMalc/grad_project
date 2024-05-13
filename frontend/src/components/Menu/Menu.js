@@ -51,24 +51,24 @@ const Menu = ({ history }) => {
 						<li className="nav-header">MANAGEMENT</li>
 
 						<li className="nav-item">
-							<Link to="/ingredients" className="nav-link">
+							<Link to="ingredients" className="nav-link">
 								<i className="nav-icon fas fa-table" />
 								<p> Nguyên liệu</p>
 							</Link>
 						</li>
 
 						<li className="nav-item">
-							<Link to="/meals" className="nav-link">
+							<Link to="meals" className="nav-link">
 								<i className="nav-icon fas fa-hamburger" /> <p> Danh sách món ăn</p>
 							</Link>
 						</li>
 						<li className="nav-item">
-							<Link to="/units" className="nav-link">
+							<Link to="units" className="nav-link">
 								<i className="nav-icon fas fa-list-alt" /> <p> Đơn vị</p>
 							</Link>
 						</li>
 						<li className="nav-item">
-							<Link to="/types" className="nav-link">
+							<Link to="types" className="nav-link">
 								<i className="nav-icon fas fa-list-alt" /> <p> Loại</p>
 							</Link>
 						</li>

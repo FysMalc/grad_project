@@ -18,7 +18,8 @@ const loginUser = async (req, res) => {
 			path: '/',
 		});
 
-		res.status(200).json({ username, refresh_token });
+		const admin = user.isAdmin;
+		res.status(200).json({ username, refresh_token, admin });
 	} catch (e) {
 		res.status(400).json({ message: e.message });
 	}
@@ -33,6 +34,7 @@ const signupUser = async (req, res) => {
 		const { user, access_token, refresh_token } = response;
 
 		res.cookie('refresh_token', refresh_token, {
+			expires: 1000,
 			httpOnly: true,
 			secure: false,
 			sameSite: 'strict',

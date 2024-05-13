@@ -79,7 +79,7 @@ const MealsPage = () => {
 
 		const meal = { name, ingredients, price };
 		console.log(meal);
-
+		resetState();
 		try {
 			const res = await createMeal(meal);
 			if (res.status === 200) resetState();

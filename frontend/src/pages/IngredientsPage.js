@@ -311,7 +311,7 @@ const IngredientsPage = () => {
 												>
 													Xoá
 												</button> */}
-												<div class="modal fade" id="modal-default">
+												<div className="modal fade" id="modal-default">
 													<div className="modal-dialog">
 														<div className="modal-content">
 															<div className="modal-header">

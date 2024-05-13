@@ -4,7 +4,7 @@ const axiosJWT = axios.create();
 
 const loginUser = async (data) => {
 	const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/login`, data);
-	return res.data;
+	return res;
 };
 
 const signupUser = async (data) => {
@@ -13,7 +13,7 @@ const signupUser = async (data) => {
 };
 
 const logoutUser = async () => {
-	const res = await axios.post(`${poccess.env.REACT_APP_API_URL}/user/log-out`);
+	const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/log-out`);
 	return res.data;
 };
 

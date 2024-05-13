@@ -4,6 +4,7 @@ import DispatchNotePage from './pages/DispatchNotePage';
 import DisposeNotePage from './pages/DisposeNotePage';
 import Footer from './components/Footer/Footer';
 import IngredientsPage from './pages/IngredientsPage';
+import LoginPage from './pages/LoginPage';
 import Main from './components/Main';
 import MealPage from './pages/MealPages';
 import Menu from './components/Menu/Menu';
@@ -19,24 +20,11 @@ const App = () => {
 	return (
 		<div className="App">
 			<BrowserRouter>
-				<WorkHeader />
-				<Menu />
-				<div className="content-wrapper">
-					<Routes>
-						<Route path="/" element={<Main />} />
-						<Route path="/ingredients" element={<IngredientsPage />} />
-						<Route path="/meals" element={<MealPage />} />
-						<Route path="/units" element={<UnitsPage />} />
-						<Route path="/dispatch-note" element={<DispatchNotePage />} />
-						<Route path="/purchase-note" element={<PurchaseNotePage />} />
-						<Route path="/dispose-note" element={<DisposeNotePage />} />
-						<Route path="/types" element={<TypePage />} />
-
-						{/* <Route path="/test" element={<TestPage />} /> */}
-					</Routes>
-				</div>
+				<Routes>
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="/*" element={<Main />}></Route>
+				</Routes>
 			</BrowserRouter>
-			<Footer />
 		</div>
 	);
 };
