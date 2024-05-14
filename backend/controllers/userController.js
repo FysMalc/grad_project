@@ -13,9 +13,10 @@ const loginUser = async (req, res) => {
 
 		res.cookie('refresh_token', refresh_token, {
 			httpOnly: true,
-			secure: false,
-			sameSite: 'strict',
-			path: '/',
+			secure: true,
+			sameSite: 'None',
+
+			maxAge: 7 * 24 * 60 * 60 * 100,
 		});
 
 		const admin = user.isAdmin;

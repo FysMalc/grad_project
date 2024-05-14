@@ -190,7 +190,7 @@ const UnitsPage = () => {
 												>
 													Xoá
 												</button> */}
-												<div class="modal fade" id="modal-default">
+												<div className="modal fade" id="modal-default">
 													<div className="modal-dialog">
 														<div className="modal-content">
 															<div className="modal-header">
@@ -236,7 +236,7 @@ const UnitsPage = () => {
 									))}
 								</tbody>
 							</table>
-							<div class="modal fade" id="error-modal">
+							<div className="modal fade" id="error-modal">
 								<div className="modal-dialog">
 									<div className="modal-content">
 										<div className="modal-header">

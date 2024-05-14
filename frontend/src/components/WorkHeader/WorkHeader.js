@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
 import React from 'react';
-
-const handleLogout = (e) => {};
+import { useLogout } from '../../hooks/useLogout';
 
 const WorkHeader = () => {
+	const { logout } = useLogout();
+
+	const handleClick = (e) => {
+		logout();
+	};
+
 	return (
 		<nav className="main-header navbar navbar-expand navbar-white navbar">
 			{/* Left navbar links */}
@@ -20,7 +25,7 @@ const WorkHeader = () => {
 				<li className="nav-item">
 					<span
 						style={{ cursor: 'pointer' }}
-						onClick={(e) => handleLogout(e)}
+						onClick={(e) => handleClick(e)}
 						className="nav-link"
 						data-widget="control-sidebar"
 						data-slide="true"
