@@ -41,14 +41,18 @@ const Menu = ({ history }) => {
 							</Link>
 						</li>
 
-						<li className="nav-header">QUẢN LÝ</li>
-
-						<li className="nav-item">
-							<Link to="tables" className="nav-link">
-								<i className="nav-icon fas fa-table" />
-								<p> Bàn</p>
-							</Link>
-						</li>
+						{!isAdmin && (
+							<>
+								{' '}
+								<li className="nav-header">QUẢN LÝ</li>
+								<li className="nav-item">
+									<Link to="tables" className="nav-link">
+										<i className="nav-icon fas fa-table" />
+										<p> Bàn</p>
+									</Link>
+								</li>
+							</>
+						)}
 
 						{isAdmin && (
 							<>
@@ -112,6 +116,7 @@ const Menu = ({ history }) => {
 								<i className="nav-icon fas fa-table" /> <p>Phiếu nhập</p>
 							</Link> */}
 								</li>
+
 								{/* <li className="nav-item">
 							<Link to="/test" className="nav-link">
 								<i className="nav-icon fas fa-hamburger" /> <p> Test</p>
