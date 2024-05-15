@@ -8,10 +8,9 @@ import Footer from './Footer/Footer';
 import IngredientsPage from '../pages/IngredientsPage';
 import MealPage from '../pages/MealPages';
 import Menu from './Menu/Menu';
-import PrivateRoute from '../auths/ProtectedRoute';
-import ProtectedRoute from '../auths/ProtectedRoute';
 import PurchaseNotePage from '../pages/PurchaseNotePage';
 import React from 'react';
+import TablePage from '../pages/TablePage';
 import TypePage from '../pages/TypePage';
 import UnitsPage from '../pages/UnitPage';
 import WorkHeader from './WorkHeader/WorkHeader';
@@ -23,6 +22,7 @@ const Main = () => {
 			<Menu />
 			<div className="content-wrapper">
 				<Routes>
+					<Route path="tables" element={<TablePage />} />
 					<Route path="ingredients" element={<IngredientsPage />} />
 					<Route path="meals" element={<MealPage />} />
 					<Route path="units" element={<UnitsPage />} />

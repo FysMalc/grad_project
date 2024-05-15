@@ -5,11 +5,14 @@ import App from './App';
 import { AuthContextProvider } from './context/AuthContext';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { TableContextProvider } from './context/TableContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<AuthContextProvider>
-		<App />
+		<TableContextProvider>
+			<App />
+		</TableContextProvider>
 	</AuthContextProvider>
 );
 
