@@ -12,6 +12,7 @@ const IngredientsPage = () => {
 	const [ingredients, setIngredients] = useState([]);
 	const [filteredIngredients, setFilteredIngredients] = useState([]);
 	const [searchQuery, setSearchQuery] = useState('');
+	const [ingredientId, setIngredientId] = useState('');
 
 	const [name, setName] = useState('');
 	const [type, setType] = useState('');
@@ -123,15 +124,15 @@ const IngredientsPage = () => {
 	};
 
 	const handleDelete = async (event, ingredientId) => {
-		try {
-			const res = await deleteIngredient(ingredientId);
-			await fetchIngredients();
-		} catch (error) {
-			console.log(error);
+		const res = await deleteIngredient(ingredientId);
+		await fetchIngredients();
+		console.log(res);
+		if (res === 'error') {
+			window.$('#error-modal').modal('show');
 		}
 	};
 	return (
-		<div className="container-fluid">
+		<div className="container-fluid ">
 			<HeaderContent name={'Nguyên liệu'} />
 			{/* <IngredientsForm ingredientToEdit={ingredientToEdit} setIngredientToEdit={setIngredientToEdit} /> */}
 			<section className="content">
@@ -233,7 +234,7 @@ const IngredientsPage = () => {
 									)}
 									{check && (
 										<div>
-											<button className="btn btn-primary" onClick={handleCancel} style={{ float: 'right' }}>
+											<button className="btn btn-danger" onClick={handleCancel} style={{ float: 'right' }}>
 												Cancel
 											</button>
 											<button className="btn btn-primary" onClick={handleSave}>
@@ -254,7 +255,7 @@ const IngredientsPage = () => {
 						<div className="card-header">
 							<h3 className="card-title">Danh sách nguyên liệu</h3>
 							<div className="card-tools">
-								<div className="input-group input-group-sm" style={{ width: 150 }}>
+								<div className="input-group input-group-sm" style={{ width: 200 }}>
 									<input
 										type="text"
 										name="table_search"
@@ -271,8 +272,8 @@ const IngredientsPage = () => {
 							</div>
 						</div>
 						{/* /.card-header */}
-						<div className="card-body table-responsive p-0">
-							<table className="table table-hover text-nowrap">
+						<div className="card-body table-responsive p-0" style={{ height: 300 }}>
+							<table className="table table-hover table-head-fixed text-nowrap">
 								<thead>
 									<tr>
 										<th>Tên</th>
@@ -280,6 +281,8 @@ const IngredientsPage = () => {
 										<th>Số lượng</th>
 										<th>Đơn vị</th>
 										<th>Ngày tạo</th>
+										<th></th>
+										<th></th>
 									</tr>
 								</thead>
 
@@ -322,6 +325,7 @@ const IngredientsPage = () => {
 															</div>
 															<div className="modal-body">
 																<p>Bạn có muốn xoá nguyên liệu này?</p>
+																{ingredientId}
 															</div>
 															<div className="modal-footer justify-content-between">
 																<button type="button" className="btn btn-danger" data-dismiss="modal">
@@ -330,7 +334,7 @@ const IngredientsPage = () => {
 																<button
 																	type="button"
 																	className="btn btn-primary"
-																	onClick={(event) => handleDelete(event, ingredient._id)}
+																	onClick={(event) => handleDelete(event, ingredientId)}
 																	data-dismiss="modal"
 
 																	// data-toggle="modal"
@@ -352,6 +356,7 @@ const IngredientsPage = () => {
 													data-toggle="modal"
 													data-target="#modal-default"
 													style={{ float: 'right' }}
+													onClick={(e) => setIngredientId(ingredient._id)}
 												>
 													Xoá
 												</button>

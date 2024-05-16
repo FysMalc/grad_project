@@ -1,5 +1,5 @@
 const express = require('express');
-const { getUnits, createUnit, deleteUnit } = require('../controllers/unitController');
+const { getUnits, getUnit, createUnit, deleteUnit } = require('../controllers/unitController');
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/getAll', getUnits);
 
 //Get unit by id
-router.get('/get/:id');
+router.get('/get/:id', getUnit);
 
 //Create new unit
 router.post('/create', createUnit);

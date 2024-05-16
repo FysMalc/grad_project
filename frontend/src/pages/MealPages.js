@@ -7,10 +7,12 @@ import { getIngredients } from '../services/ingredientService';
 const MealsPage = () => {
 	const [mealToEdit, setMealToEdit] = useState(null);
 	const [meals, setMeals] = useState([]);
+	const [mealDeleteId, setMealDeleteId] = useState('');
 	const [filteredMeals, setFilteredMeals] = useState([]);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [name, setName] = useState('');
 	const [ingredientsList, setIngredientsList] = useState([]);
+	const [ingredients, setIngredients] = useState([]);
 	const [price, setPrice] = useState(null);
 	const [check, setCheck] = useState(false);
 	const [cancel, setCancel] = useState(false);
@@ -30,6 +32,7 @@ const MealsPage = () => {
 		try {
 			const response = await getIngredients();
 			setIngredientsList(response.data);
+			setIngredients(response.data);
 		} catch (error) {
 			console.error(error);
 		}
@@ -109,6 +112,7 @@ const MealsPage = () => {
 		e.preventDefault();
 		setMealToEdit(null);
 		resetState();
+		setIngredientsList(ingredients);
 		setCheck(false);
 		setCancel(false);
 	};
@@ -138,14 +142,12 @@ const MealsPage = () => {
 
 	const handleDelete = async (event, mealId) => {
 		console.log(mealId);
-		const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa món ăn này không?');
-		if (confirmDelete) {
-			try {
-				const res = await deleteMeal(mealId);
-				await fetchMeals();
-			} catch (error) {
-				console.log(error);
-			}
+
+		try {
+			const res = await deleteMeal(mealId);
+			await fetchMeals();
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -411,10 +413,12 @@ const MealsPage = () => {
 											</td>
 											<td>
 												<button
-													className="btn btn-block btn-outline-danger"
-													onClick={(event) => {
-														handleDelete(event, meal._id);
-													}}
+													type="button"
+													className="btn btn-outline-danger"
+													data-toggle="modal"
+													data-target="#modal-default"
+													style={{ float: 'right' }}
+													onClick={(e) => setMealDeleteId(meal._id)}
 												>
 													Xoá
 												</button>
@@ -423,6 +427,39 @@ const MealsPage = () => {
 									))}
 								</tbody>
 							</table>
+						</div>
+						<div className="modal fade" id="modal-default">
+							<div className="modal-dialog">
+								<div className="modal-content">
+									<div className="modal-header">
+										<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+										<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">×</span>
+										</button>
+									</div>
+									<div className="modal-body">
+										<p>Bạn có muốn xoá món ăn này?</p>
+										{mealDeleteId}
+									</div>
+									<div className="modal-footer justify-content-between">
+										<button type="button" className="btn btn-danger" data-dismiss="modal">
+											huỷ
+										</button>
+										<button
+											type="button"
+											className="btn btn-primary"
+											onClick={(event) => handleDelete(event, mealDeleteId)}
+											data-dismiss="modal"
+
+											// data-toggle="modal"
+											// data-target="#error-modal"
+										>
+											Tiếp tục
+										</button>
+									</div>
+								</div>
+								{/* /.modal-content */}
+							</div>
 						</div>
 						{/* /.card-body */}
 					</div>

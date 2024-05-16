@@ -56,16 +56,10 @@ const deleteIngredient = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).json({ msg: 'ID không hợp lệ' });
 	}
-	const mealUsingIngredient = await Meal.find({
-		ingredient: {
-			$elemMatch: {
-				ingredient: id,
-			},
-		},
-	});
+	const meals = await Meal.find({ 'ingredients.ingredient': id }).populate('ingredients.ingredient');
 
-	if (mealUsingIngredient !== null) {
-		return res.status(400).json({ msg: 'Món ăn đang được sử dụng' });
+	if (meals.length !== 0) {
+		return res.status(400).json({ msg: 'Nguyên liệu đang được sử dụng' });
 	}
 	const ingredient = await Ingredient.findByIdAndDelete(id);
 

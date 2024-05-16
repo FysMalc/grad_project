@@ -9,7 +9,6 @@ const LoginPage = () => {
 
 	const navigate = useNavigate();
 	const check = (text) => {
-		console.log(text);
 		setUsername(text);
 	};
 	const handleSubmit = async (e) => {

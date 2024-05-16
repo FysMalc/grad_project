@@ -62,20 +62,13 @@ const UnitsPage = () => {
 	};
 
 	const handleDelete = async (event, unitId) => {
-		try {
-			const res = await deleteUnit(unitId);
-			await fetchUnits();
-		} catch (error) {
-			console.log(error);
-		}
+		const res = await deleteUnit(unitId);
+		await fetchUnits();
+		if (res === 'error') window.$('#error-modal').modal();
 	};
 
 	const resetState = () => {
 		setName('');
-	};
-
-	const setDeleteId = (unitId) => {
-		setDeleteId(unitId);
 	};
 
 	return (

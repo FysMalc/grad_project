@@ -62,13 +62,9 @@ const TypesPage = () => {
 	};
 
 	const handleDelete = async (event, typeId) => {
-		try {
-			const res = await deleteType(typeId);
-			await fetchTypes();
-		} catch (error) {
-			console.log(error);
-			setErrorModalOpen(!errorModalOpen);
-		}
+		const res = await deleteType(typeId);
+		await fetchTypes();
+		if (res === 'error') window.$('#error-modal').modal();
 	};
 
 	const resetState = () => {
@@ -208,8 +204,6 @@ const TypesPage = () => {
 																	className="btn  btn-primary"
 																	onClick={(event) => handleDelete(event, deleteTypeId)}
 																	data-dismiss="modal"
-																	data-toggle="modal"
-																	data-target={`${errorModalOpen ? '#error-modal' : ''} `}
 																>
 																	Tiếp tục
 																</button>

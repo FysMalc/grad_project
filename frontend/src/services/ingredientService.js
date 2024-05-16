@@ -30,6 +30,7 @@ const deleteIngredient = async (id, access_token) => {
 		return res;
 	} catch (error) {
 		console.log(error.response.data.msg);
+		return 'error';
 	}
 };
 

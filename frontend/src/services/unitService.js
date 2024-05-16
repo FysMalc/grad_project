@@ -25,7 +25,7 @@ const deleteUnit = async (id, access_token) => {
 		return res;
 	} catch (error) {
 		console.log(error.response.data.msg);
-		// return error.response.data.msg;
+		return 'error';
 	}
 };
 

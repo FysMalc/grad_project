@@ -12,17 +12,9 @@ const dispatchNoteSchema = new Schema({
 	},
 	dispatch_list: [
 		{
-			ingredient: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'ingredient',
-				required: true,
-			},
+			ingredientName: { type: String, required: true },
 			amount: { type: Number, required: true },
-			unit: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'unit',
-				required: true,
-			},
+			unitName: { type: String, required: true },
 		},
 	],
 	note: {

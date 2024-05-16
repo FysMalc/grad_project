@@ -10,6 +10,7 @@ const getUnits = async (req, res) => {
 
 const getUnit = async (req, res) => {
 	const { id } = req.params;
+
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).json({ msg: 'ID không hợp lệ' });
 	}

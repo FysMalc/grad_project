@@ -3,6 +3,7 @@ import { createDispatchNote, getDispatchNotes } from '../services/dispatchNoteSe
 
 import HeaderContent from '../components/HeaderContent/HeaderContent';
 import { getIngredients } from '../services/ingredientService';
+import { getUnit } from '../services/unitService';
 
 const DispatchNotePage = () => {
 	const [dispatchNotes, setDispatchNotes] = useState([]);
@@ -52,14 +53,21 @@ const DispatchNotePage = () => {
 				const selectedIngredientId = ingredientSelect.value;
 				const amount = amountInput.value;
 				const unitId = unitTextField.dataset.unitId; // Get the unit's _id from the data attribute
-
+				const res = await getUnit(unitId);
+				const unitName = res.data.name;
 				if (selectedIngredientId && amount && unitId) {
 					const selectedIngredient = ingredientsList.find((ingredient) => ingredient._id === selectedIngredientId);
 
 					const ingredient = {
-						ingredient: selectedIngredient,
+						ingredient: {
+							id: selectedIngredient._id,
+							name: selectedIngredient.name,
+						},
 						amount,
-						unit: unitId, // Use the unit's _id instead of the name
+						unit: {
+							id: unitId,
+							name: unitName,
+						}, // Use the unit's _id instead of the name
 					};
 					dispatch_list.push(ingredient);
 				}
@@ -71,6 +79,7 @@ const DispatchNotePage = () => {
 
 		try {
 			const res = await createDispatchNote(dispatchNote);
+			console.log(res.data);
 			if (res.status === 200) resetState();
 		} catch (error) {
 			console.error(error);
@@ -107,7 +116,7 @@ const DispatchNotePage = () => {
 
 		// Create a new select element for ingredients
 		const newIngredientSelect = document.createElement('select');
-		newIngredientSelect.className = 'form-control mr-2';
+		newIngredientSelect.className = 'form-control mr-2 ';
 
 		// Add a default option
 		const defaultOption = document.createElement('option');
@@ -300,7 +309,7 @@ const DispatchNotePage = () => {
 												selectedRowData.dispatch_list.map((item) => (
 													<div key={item._id}>
 														<p>
-															{item.ingredient.name} - {item.amount} {item.unit.name}
+															{item.ingredientName} - {item.amount} {item.unitName}
 														</p>
 													</div>
 												))}
