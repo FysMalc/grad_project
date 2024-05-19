@@ -17,14 +17,13 @@ const Main = () => {
 			<Menu />
 
 			<div className="content-wrapper">
-				<Route path="/" element={<Main />} />
-                <Route path="/ingredients" element={<IngredientsPage />} />
-                <Route path="/meals" element={<MealPage />} />
-                <Route path="/units" element={<UnitsPage />} />
-                <Route path="/dispatch-note" element={<DispatchNotePage />} />
-                <Route path="/purchase-note" element={<PurchaseNotePage />} />
-                <Route path="/dispose-note" element={<DisposeNotePage />} />
-                <Route path="/types" element={<TypePage />} /><Route>
+				<Route path="/ingredients" element={<IngredientsPage />} />
+				<Route path="/meals" element={<MealPage />} />
+				<Route path="/units" element={<UnitsPage />} />
+				<Route path="/dispatch-note" element={<DispatchNotePage />} />
+				<Route path="/purchase-note" element={<PurchaseNotePage />} />
+				<Route path="/dispose-note" element={<DisposeNotePage />} />
+				<Route path="/types" element={<TypePage />} />
 			</div>
 			<Footer />
 		</>

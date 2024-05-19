@@ -1,7 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import { createType, deleteType, getTypes } from '../services/typeService';
 
-import $ from 'jquery';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
 
 // import TypesForm from '../components/Forms/typesForm/TypesForm';
@@ -14,7 +13,6 @@ const TypesPage = () => {
 	const [name, setName] = useState('');
 	const [check, setCheck] = useState(false);
 	const [deleteTypeId, setDeletTypeId] = useState(null);
-	const [errorModalOpen, setErrorModalOpen] = useState(false);
 
 	const fetchTypes = async () => {
 		try {
@@ -162,27 +160,8 @@ const TypesPage = () => {
 									{filteredTypes.map((type) => (
 										<tr key={type._id}>
 											<td>{type.name}</td>
-											{/* <td>{type.createdAt}</td> */}
-											{/* <td>
-												<button
-													className="btn btn-block btn-outline-primary"
-													onClick={(event) => {
-														handleEdit(event, type._id);
-													}}
-												>
-													Chỉnh sửa
-												</button>
-											</td> */}
+
 											<td>
-												{/* <button
-													className="btn btn-block btn-outline-danger"
-													onClick={(event) => {
-														// handleDelete(event, type._id);
-														handleShow();
-													}}
-												>
-													Xoá
-												</button> */}
 												<div className="modal fade" id="modal-default">
 													<div className="modal-dialog">
 														<div className="modal-content">

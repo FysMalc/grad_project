@@ -138,7 +138,7 @@ const IngredientsPage = () => {
 			<section className="content">
 				<div className="container-fluid">
 					<div className="row">
-						<div className="col-md-6">
+						<div className="col-md-3">
 							<div className="card card-primary">
 								<div className="card-header">
 									<h3 className="card-title">Thêm nguyên liệu</h3>
@@ -245,68 +245,63 @@ const IngredientsPage = () => {
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</section>
-			{/* table */}
-			<div className="row">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-header">
-							<h3 className="card-title">Danh sách nguyên liệu</h3>
-							<div className="card-tools">
-								<div className="input-group input-group-sm" style={{ width: 200 }}>
-									<input
-										type="text"
-										name="table_search"
-										className="form-control float-right"
-										placeholder="Search"
-										onChange={handleSearch}
-									/>
-									<div className="input-group-append">
-										<button type="submit" className="btn btn-default">
-											<i className="fas fa-search" />
-										</button>
+						<div className="col-9">
+							<div className="card">
+								<div className="card-header">
+									<h3 className="card-title">Danh sách nguyên liệu</h3>
+									<div className="card-tools">
+										<div className="input-group input-group-sm" style={{ width: 200 }}>
+											<input
+												type="text"
+												name="table_search"
+												className="form-control float-right"
+												placeholder="Search"
+												onChange={handleSearch}
+											/>
+											<div className="input-group-append">
+												<button type="submit" className="btn btn-default">
+													<i className="fas fa-search" />
+												</button>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						{/* /.card-header */}
-						<div className="card-body table-responsive p-0" style={{ height: 300 }}>
-							<table className="table table-hover table-head-fixed text-nowrap">
-								<thead>
-									<tr>
-										<th>Tên</th>
-										<th>Loại</th>
-										<th>Số lượng</th>
-										<th>Đơn vị</th>
-										<th>Ngày tạo</th>
-										<th></th>
-										<th></th>
-									</tr>
-								</thead>
+								{/* /.card-header */}
+								<div className="card-body table-responsive p-0" style={{ height: 600 }}>
+									<table className="table table-hover table-head-fixed text-nowrap">
+										<thead>
+											<tr>
+												<th>Tên</th>
+												<th>Loại</th>
+												<th>Số lượng</th>
+												<th>Đơn vị</th>
+												<th>Ngày tạo</th>
+												<th></th>
+												<th></th>
+											</tr>
+										</thead>
 
-								<tbody>
-									{filteredIngredients.map((ingredient) => (
-										<tr key={ingredient._id}>
-											<td>{ingredient.name}</td>
-											<td>{ingredient.type.name}</td>
-											<td>{ingredient.amount}</td>
-											<td>{ingredient.unit.name}</td>
-											<td>{ingredient.createdAt}</td>
-											<td>
-												<button
-													className="btn  btn-outline-primary"
-													style={{ float: 'right' }}
-													onClick={(event) => {
-														handleEdit(event, ingredient._id);
-													}}
-												>
-													Chỉnh sửa
-												</button>
-											</td>
-											<td>
-												{/* <button
+										<tbody>
+											{filteredIngredients.map((ingredient) => (
+												<tr key={ingredient._id}>
+													<td>{ingredient.name}</td>
+													<td>{ingredient.type.name}</td>
+													<td>{ingredient.amount}</td>
+													<td>{ingredient.unit.name}</td>
+													<td>{ingredient.createdAt}</td>
+													<td>
+														<button
+															className="btn  btn-outline-primary"
+															style={{ float: 'right' }}
+															onClick={(event) => {
+																handleEdit(event, ingredient._id);
+															}}
+														>
+															Chỉnh sửa
+														</button>
+													</td>
+													<td>
+														{/* <button
 													className="btn btn-block btn-outline-danger"
 													onClick={(event) => {
 														handleDelete(event, ingredient._id);
@@ -314,83 +309,86 @@ const IngredientsPage = () => {
 												>
 													Xoá
 												</button> */}
-												<div className="modal fade" id="modal-default">
-													<div className="modal-dialog">
-														<div className="modal-content">
-															<div className="modal-header">
-																<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
-																<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-																	<span aria-hidden="true">×</span>
-																</button>
-															</div>
-															<div className="modal-body">
-																<p>Bạn có muốn xoá nguyên liệu này?</p>
-																{ingredientId}
-															</div>
-															<div className="modal-footer justify-content-between">
-																<button type="button" className="btn btn-danger" data-dismiss="modal">
-																	huỷ
-																</button>
-																<button
-																	type="button"
-																	className="btn btn-primary"
-																	onClick={(event) => handleDelete(event, ingredientId)}
-																	data-dismiss="modal"
+														<div className="modal fade" id="modal-default">
+															<div className="modal-dialog">
+																<div className="modal-content">
+																	<div className="modal-header">
+																		<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+																		<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+																			<span aria-hidden="true">×</span>
+																		</button>
+																	</div>
+																	<div className="modal-body">
+																		<p>Bạn có muốn xoá nguyên liệu này?</p>
+																		{ingredientId}
+																	</div>
+																	<div className="modal-footer justify-content-between">
+																		<button type="button" className="btn btn-danger" data-dismiss="modal">
+																			huỷ
+																		</button>
+																		<button
+																			type="button"
+																			className="btn btn-primary"
+																			onClick={(event) => handleDelete(event, ingredientId)}
+																			data-dismiss="modal"
 
-																	// data-toggle="modal"
-																	// data-target="#error-modal"
-																>
-																	Tiếp tục
-																</button>
+																			// data-toggle="modal"
+																			// data-target="#error-modal"
+																		>
+																			Tiếp tục
+																		</button>
+																	</div>
+																</div>
+																{/* /.modal-content */}
 															</div>
 														</div>
-														{/* /.modal-content */}
-													</div>
+
+														{/* /.modal-dialog */}
+
+														<button
+															type="button"
+															className="btn btn-outline-danger"
+															data-toggle="modal"
+															data-target="#modal-default"
+															style={{ float: 'right' }}
+															onClick={(e) => setIngredientId(ingredient._id)}
+														>
+															Xoá
+														</button>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+									<div className="modal fade" id="error-modal">
+										<div className="modal-dialog">
+											<div className="modal-content">
+												<div className="modal-header">
+													<h4 className="modal-title">Lỗi</h4>
+													<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">×</span>
+													</button>
 												</div>
-
-												{/* /.modal-dialog */}
-
-												<button
-													type="button"
-													className="btn btn-outline-danger"
-													data-toggle="modal"
-													data-target="#modal-default"
-													style={{ float: 'right' }}
-													onClick={(e) => setIngredientId(ingredient._id)}
-												>
-													Xoá
-												</button>
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-							<div className="modal fade" id="error-modal">
-								<div className="modal-dialog">
-									<div className="modal-content">
-										<div className="modal-header">
-											<h4 className="modal-title">Lỗi</h4>
-											<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">×</span>
-											</button>
-										</div>
-										<div className="modal-body" id="error-modal-body">
-											Nguyên liệu đang được sử dụng
-										</div>
-										<div className="modal-footer justify-content-between">
-											<button type="button" className="btn btn-danger" data-dismiss="modal">
-												Close
-											</button>
+												<div className="modal-body" id="error-modal-body">
+													Nguyên liệu đang được sử dụng
+												</div>
+												<div className="modal-footer justify-content-between">
+													<button type="button" className="btn btn-danger" data-dismiss="modal">
+														Close
+													</button>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
+								{/* /.card-body */}
 							</div>
+							{/* /.card */}
 						</div>
-						{/* /.card-body */}
 					</div>
-					{/* /.card */}
 				</div>
-			</div>
+			</section>
+			{/* table */}
 		</div>
 	);
 };

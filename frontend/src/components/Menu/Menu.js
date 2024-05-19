@@ -97,6 +97,11 @@ const Menu = ({ history }) => {
 									</a>
 									<ul className="nav nav-treeview">
 										<li className="nav-item">
+											<Link to="/bill" className="nav-link">
+												<i className="far fa-circle nav-icon" /> <p>Hoá đơn</p>
+											</Link>
+										</li>
+										<li className="nav-item">
 											<Link to="/purchase-note" className="nav-link">
 												<i className="far fa-circle nav-icon" /> <p>Phiếu nhập</p>
 											</Link>

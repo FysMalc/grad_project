@@ -26,7 +26,7 @@ const disposeSchema = new Schema({
 		required: true,
 	},
 	createdAt: {
-		type: String,
+		type: Date,
 		required: true,
 	},
 });

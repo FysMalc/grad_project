@@ -9,14 +9,13 @@ const billSchema = new Schema({
 	},
 	orders: [
 		{
-			mealID: {
-				type: mongoose.Schema.Types.ObjectId,
-				required: true,
-				ref: 'meal', // Reference to the Order model
-			},
+			mealName: { type: String, required: true },
 			quantity: { type: Number, required: true },
 		},
 	],
+	ordersCost: { type: Number, require: true },
+	serviceFee: { type: Number },
+	voucher: { type: Number },
 	total: {
 		type: Number,
 		required: true,

@@ -29,7 +29,7 @@ const purchaseNoteSchema = new Schema({
 		type: String,
 	},
 	createdAt: {
-		type: String,
+		type: Date,
 		required: true,
 	},
 });

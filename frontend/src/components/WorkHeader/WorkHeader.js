@@ -31,7 +31,7 @@ const WorkHeader = () => {
 						data-slide="true"
 						role="button"
 					>
-						<i className="fas fa-power-off"></i> Logout
+						<i className="fas fa-power-off"></i> Kết thúc ca làm việc
 					</span>
 				</li>
 			</ul>

@@ -33,7 +33,7 @@ const getIngredient = async (req, res) => {
 // Create a new Ingredient
 const createIngredient = async (req, res) => {
 	const { name, type, amount, unit } = req.body;
-	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
+	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY ');
 	const ingredient = await Ingredient.findOne({
 		name: name,
 	});

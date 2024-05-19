@@ -1,7 +1,6 @@
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
-import AdminRoute from '../auths/AdminRoute';
+import BillPage from '../pages/BillPage';
 import DispatchNotePage from '../pages/DispatchNotePage';
 import DisposeNotePage from '../pages/DisposeNotePage';
 import Footer from './Footer/Footer';
@@ -30,6 +29,7 @@ const Main = () => {
 					<Route path="purchase-note" element={<PurchaseNotePage />} />
 					<Route path="dispose-note" element={<DisposeNotePage />} />
 					<Route path="dispatch-note" element={<DispatchNotePage />} />
+					<Route path="bill" element={<BillPage />} />
 				</Routes>
 			</div>
 			<Footer />
