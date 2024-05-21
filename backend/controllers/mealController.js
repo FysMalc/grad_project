@@ -31,9 +31,9 @@ const getMeal = async (req, res) => {
 const createMeal = async (req, res) => {
 	const { name, ingredients, price } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
-
+	const nameRegex = new RegExp(`^${name}$`, 'i');
 	const meal = await Meal.findOne({
-		name: name,
+		name: nameRegex,
 	});
 
 	if (meal) {

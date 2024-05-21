@@ -1,6 +1,9 @@
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { React, useEffect, useState } from 'react';
 import { createPurchaseNote, getPurchaseNotes } from '../services/purchaseNoteService';
 
+import DatePicker from 'react-datepicker';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
 import { getIngredients } from '../services/ingredientService';
 
@@ -12,7 +15,8 @@ const PurchaseNotePage = () => {
 	const [ingredientsList, setIngredientsList] = useState([]);
 	const [selectedRowData, setSelectedRowData] = useState(null);
 	const [cancel, setCancel] = useState(false);
-
+	const [startDate, setStartDate] = useState(new Date());
+	const [filteredPurchaseNotes, setFilteredPurchaseNotes] = useState([]);
 	const fetchIngredients = async () => {
 		try {
 			const response = await getIngredients();
@@ -96,6 +100,23 @@ const PurchaseNotePage = () => {
 		}
 		setCreator('');
 		setNote('');
+	};
+
+	const filter = (date) => {
+		setStartDate(date);
+		if (!date) {
+			setFilteredPurchaseNotes(purchaseNotes);
+		} else {
+			const filteredPurchaseNotesByDate = purchaseNotes.filter((purchasenote) => {
+				const purchaseNoteDate = new Date(purchasenote.createdAt);
+				return (
+					purchaseNoteDate.getDate() === date.getDate() &&
+					purchaseNoteDate.getMonth() === date.getMonth() &&
+					purchaseNoteDate.getFullYear() === date.getFullYear()
+				);
+			});
+			setFilteredPurchaseNotes(filteredPurchaseNotesByDate);
+		}
 	};
 
 	const addIngredientRow = () => {
@@ -245,6 +266,9 @@ const PurchaseNotePage = () => {
 									)}
 								</div>
 							</div>
+						</div>
+						<div className="col-md-6">
+							<DatePicker selected={startDate} onChange={(date) => filter(date)} />
 						</div>
 					</div>
 				</div>

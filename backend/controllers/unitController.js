@@ -26,7 +26,11 @@ const getUnit = async (req, res) => {
 
 const createUnit = async (req, res) => {
 	const { name } = req.body;
-
+	const nameRegex = new RegExp(`^${name}$`, 'i');
+	const unit = await Unit.findOne({ name: nameRegex });
+	if (unit) {
+		return res.status(500).json({ error: 'Đơn vị đã tồn tại' });
+	}
 	// add doc to db
 	try {
 		const unit = await Unit.create({ name });
@@ -45,7 +49,7 @@ const deleteUnit = async (req, res) => {
 	try {
 		const ingredientUsingUnit = await Ingredient.findOne({ unit: id });
 		if (ingredientUsingUnit !== null) {
-			return res.status(400).json(ingredientUsingUnit);
+			return res.status(400).json({ error: 'Đơn vị đang được sử dụng' });
 		}
 	} catch (error) {
 		return res.status(400).json({ msg: error.message });

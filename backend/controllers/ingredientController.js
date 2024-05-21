@@ -34,8 +34,10 @@ const getIngredient = async (req, res) => {
 const createIngredient = async (req, res) => {
 	const { name, type, amount, unit } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY ');
+
+	const nameRegex = new RegExp(`^${name}$`, 'i');
 	const ingredient = await Ingredient.findOne({
-		name: name,
+		name: nameRegex,
 	});
 
 	if (ingredient) {
@@ -54,17 +56,17 @@ const createIngredient = async (req, res) => {
 const deleteIngredient = async (req, res) => {
 	const { id } = req.params;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(400).json({ msg: 'ID không hợp lệ' });
+		return res.status(400).json({ error: 'ID không hợp lệ' });
 	}
 	const meals = await Meal.find({ 'ingredients.ingredient': id }).populate('ingredients.ingredient');
 
 	if (meals.length !== 0) {
-		return res.status(400).json({ msg: 'Nguyên liệu đang được sử dụng' });
+		return res.status(400).json({ error: 'Nguyên liệu đang được sử dụng' });
 	}
 	const ingredient = await Ingredient.findByIdAndDelete(id);
 
 	if (!ingredient) {
-		return res.status(404).json({ msg: 'Nguyên liệu không tồn tại' });
+		return res.status(404).json({ error: 'Nguyên liệu không tồn tại' });
 	}
 
 	res.status(200).json(ingredient);

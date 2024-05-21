@@ -16,6 +16,7 @@ const MealsPage = () => {
 	const [price, setPrice] = useState(null);
 	const [check, setCheck] = useState(false);
 	const [cancel, setCancel] = useState(false);
+	const [errorModal, setErrorModal] = useState('');
 
 	const fetchMeals = async () => {
 		try {
@@ -86,6 +87,10 @@ const MealsPage = () => {
 		try {
 			const res = await createMeal(meal);
 			if (res.status === 200) resetState();
+			if (res.response.data.error) {
+				setErrorModal(res.response.data.error);
+				window.$('#error-modal').modal();
+			}
 		} catch (error) {
 			console.error(error);
 		}
@@ -228,7 +233,7 @@ const MealsPage = () => {
 			<section className="content">
 				<div className="container-fluid">
 					<div className="row">
-						<div className="col-md-6">
+						<div className="col-md-5">
 							<div className="card card-primary">
 								<div className="card-header">
 									<h3 className="card-title">Thêm món ăn</h3>
@@ -350,122 +355,142 @@ const MealsPage = () => {
 								</div>
 							</div>
 						</div>
+						<div className="col-md-6">
+							<div className="card">
+								<div className="card-header">
+									<h3 className="card-title">Danh sách món ăn</h3>
+									<div className="card-tools">
+										<div className="input-group input-group-sm" style={{ width: 150 }}>
+											<input
+												type="text"
+												name="table_search"
+												className="form-control float-right"
+												placeholder="Search"
+												onChange={handleSearch}
+											/>
+											<div className="input-group-append">
+												<button type="submit" className="btn btn-default">
+													<i className="fas fa-search" />
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								{/* /.card-header */}
+								<div className="card-body table-responsive p-0" style={{ height: 600 }}>
+									<table className="table table-hover text-nowrap table-head-fixed">
+										<thead>
+											<tr>
+												<th>Tên</th>
+												<th>Giá</th>
+												<th>Ngày tạo</th>
+												<th>Nguyên liệu</th>
+												<th></th>
+												<th></th>
+											</tr>
+										</thead>
+
+										<tbody>
+											{filteredMeals.map((meal) => (
+												<tr key={meal._id}>
+													<td>{meal.name}</td>
+													<td>{meal.price.toLocaleString()} đ</td>
+													<td>{meal.createdAt}</td>
+													<td>
+														{meal.ingredients.map((ingredient) => (
+															<p key={ingredient.ingredient._id}>
+																- {ingredient.ingredient.name} {ingredient.amount} {ingredient.unit.name}
+															</p>
+														))}
+													</td>
+
+													<td>
+														<button
+															className="btn btn-block btn-outline-primary"
+															onClick={(event) => {
+																handleEdit(event, meal._id);
+															}}
+														>
+															Chỉnh sửa
+														</button>
+													</td>
+													<td>
+														<button
+															type="button"
+															className="btn btn-outline-danger"
+															data-toggle="modal"
+															data-target="#modal-default"
+															style={{ float: 'right' }}
+															onClick={(e) => setMealDeleteId(meal._id)}
+														>
+															Xoá
+														</button>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div>
+								<div className="modal fade" id="modal-default">
+									<div className="modal-dialog">
+										<div className="modal-content">
+											<div className="modal-header">
+												<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+												<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">×</span>
+												</button>
+											</div>
+											<div className="modal-body">
+												<p>Bạn có muốn xoá món ăn này?</p>
+												{mealDeleteId}
+											</div>
+											<div className="modal-footer justify-content-between">
+												<button type="button" className="btn btn-danger" data-dismiss="modal">
+													huỷ
+												</button>
+												<button
+													type="button"
+													className="btn btn-primary"
+													onClick={(event) => handleDelete(event, mealDeleteId)}
+													data-dismiss="modal"
+
+													// data-toggle="modal"
+													// data-target="#error-modal"
+												>
+													Tiếp tục
+												</button>
+											</div>
+										</div>
+										{/* /.modal-content */}
+									</div>
+								</div>
+								<div className="modal fade" id="error-modal">
+									<div className="modal-dialog">
+										<div className="modal-content">
+											<div className="modal-header">
+												<h4 className="modal-title">Lỗi</h4>
+												<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">×</span>
+												</button>
+											</div>
+											<div className="modal-body" id="error-modal-body">
+												{errorModal}
+											</div>
+											<div className="modal-footer justify-content-between">
+												<button type="button" className="btn btn-danger" data-dismiss="modal">
+													Close
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								{/* /.card-body */}
+							</div>
+							{/* /.card */}
+						</div>
 					</div>
 				</div>
 			</section>
-			<div className="row">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-header">
-							<h3 className="card-title">Danh sách món ăn</h3>
-							<div className="card-tools">
-								<div className="input-group input-group-sm" style={{ width: 150 }}>
-									<input
-										type="text"
-										name="table_search"
-										className="form-control float-right"
-										placeholder="Search"
-										onChange={handleSearch}
-									/>
-									<div className="input-group-append">
-										<button type="submit" className="btn btn-default">
-											<i className="fas fa-search" />
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						{/* /.card-header */}
-						<div className="card-body table-responsive p-0">
-							<table className="table table-hover text-nowrap">
-								<thead>
-									<tr>
-										<th>Tên</th>
-										<th>Giá</th>
-										<th>Ngày tạo</th>
-										<th>Nguyên liệu</th>
-									</tr>
-								</thead>
-
-								<tbody>
-									{filteredMeals.map((meal) => (
-										<tr key={meal._id}>
-											<td>{meal.name}</td>
-											<td>{meal.price.toLocaleString()} đ</td>
-											<td>{meal.createdAt}</td>
-											<td>
-												{meal.ingredients.map((ingredient) => (
-													<p key={ingredient.ingredient._id}>
-														- {ingredient.ingredient.name} {ingredient.amount} {ingredient.unit.name}
-													</p>
-												))}
-											</td>
-
-											<td>
-												<button
-													className="btn btn-block btn-outline-primary"
-													onClick={(event) => {
-														handleEdit(event, meal._id);
-													}}
-												>
-													Chỉnh sửa
-												</button>
-											</td>
-											<td>
-												<button
-													type="button"
-													className="btn btn-outline-danger"
-													data-toggle="modal"
-													data-target="#modal-default"
-													style={{ float: 'right' }}
-													onClick={(e) => setMealDeleteId(meal._id)}
-												>
-													Xoá
-												</button>
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-						<div className="modal fade" id="modal-default">
-							<div className="modal-dialog">
-								<div className="modal-content">
-									<div className="modal-header">
-										<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
-										<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">×</span>
-										</button>
-									</div>
-									<div className="modal-body">
-										<p>Bạn có muốn xoá món ăn này?</p>
-										{mealDeleteId}
-									</div>
-									<div className="modal-footer justify-content-between">
-										<button type="button" className="btn btn-danger" data-dismiss="modal">
-											huỷ
-										</button>
-										<button
-											type="button"
-											className="btn btn-primary"
-											onClick={(event) => handleDelete(event, mealDeleteId)}
-											data-dismiss="modal"
-
-											// data-toggle="modal"
-											// data-target="#error-modal"
-										>
-											Tiếp tục
-										</button>
-									</div>
-								</div>
-								{/* /.modal-content */}
-							</div>
-						</div>
-						{/* /.card-body */}
-					</div>
-					{/* /.card */}
-				</div>
-			</div>
 		</div>
 	);
 };

@@ -1,6 +1,9 @@
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { React, useEffect, useState } from 'react';
 import { createDisposeNote, getDisposeNotes } from '../services/disposeNoteService';
 
+import DatePicker from 'react-datepicker';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
 import { getIngredients } from '../services/ingredientService';
 
@@ -11,6 +14,8 @@ const DisposeNotePage = () => {
 	const [ingredientsList, setIngredientsList] = useState([]);
 	const [selectedRowData, setSelectedRowData] = useState(null);
 	const [cancel, setCancel] = useState(false);
+	const [startDate, setStartDate] = useState(new Date());
+	const [filteredDisposeNotes, setFilteredDisposeNotes] = useState([]);
 
 	const fetchIngredients = async () => {
 		try {
@@ -93,6 +98,23 @@ const DisposeNotePage = () => {
 		}
 		setCreator('');
 		setNote('');
+	};
+
+	const filter = (date) => {
+		setStartDate(date);
+		if (!date) {
+			setFilteredDisposeNotes(disposeNotes);
+		} else {
+			const filteredDisposeNotesByDate = disposeNotes.filter((disposenote) => {
+				const disposeNoteDate = new Date(disposenote.createdAt);
+				return (
+					disposeNoteDate.getDate() === date.getDate() &&
+					disposeNoteDate.getMonth() === date.getMonth() &&
+					disposeNoteDate.getFullYear() === date.getFullYear()
+				);
+			});
+			setFilteredDisposeNotes(filteredDisposeNotesByDate);
+		}
 	};
 
 	const addIngredientRow = () => {
@@ -243,6 +265,9 @@ const DisposeNotePage = () => {
 								</div>
 							</div>
 						</div>
+						<div className="col-md-6">
+							<DatePicker selected={startDate} onChange={(date) => filter(date)} />
+						</div>
 					</div>
 				</div>
 			</section>
@@ -256,7 +281,7 @@ const DisposeNotePage = () => {
 							{/* ./card-header */}
 							<div className="card-body">
 								<div className="dataTables_wrapper">
-									<table id="dispatch" className="table table-bordered table-hover ">
+									<table id="dispose" className="table table-bordered table-hover ">
 										<thead>
 											<tr>
 												<th>Người lập</th>

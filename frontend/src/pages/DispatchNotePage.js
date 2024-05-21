@@ -1,7 +1,11 @@
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { React, useEffect, useState } from 'react';
 import { createDispatchNote, getDispatchNotes } from '../services/dispatchNoteService';
 
+import DatePicker from 'react-datepicker';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
+import { convertTimestamp } from '../utils/convertTz';
 import { getIngredients } from '../services/ingredientService';
 import { getUnit } from '../services/unitService';
 
@@ -13,6 +17,8 @@ const DispatchNotePage = () => {
 	const [ingredientsList, setIngredientsList] = useState([]);
 	const [selectedRowData, setSelectedRowData] = useState(null);
 	const [cancel, setCancel] = useState(false);
+	const [startDate, setStartDate] = useState(new Date());
+	const [filteredDispatchNotes, setFilteredDispatchNotes] = useState([]);
 
 	const fetchIngredients = async () => {
 		try {
@@ -105,6 +111,23 @@ const DispatchNotePage = () => {
 		}
 		setCreator('');
 		setNote('');
+	};
+
+	const filter = (date) => {
+		setStartDate(date);
+		if (!date) {
+			setFilteredDispatchNotes(dispatchNotes);
+		} else {
+			const filteredDispatchNotesByDate = dispatchNotes.filter((dispatchnote) => {
+				const dispatchNoteDate = new Date(dispatchnote.createdAt);
+				return (
+					dispatchNoteDate.getDate() === date.getDate() &&
+					dispatchNoteDate.getMonth() === date.getMonth() &&
+					dispatchNoteDate.getFullYear() === date.getFullYear()
+				);
+			});
+			setFilteredDispatchNotes(filteredDispatchNotesByDate);
+		}
 	};
 
 	const addIngredientRow = () => {
@@ -255,6 +278,9 @@ const DispatchNotePage = () => {
 								</div>
 							</div>
 						</div>
+						<div className="col-md-6">
+							<DatePicker selected={startDate} onChange={(date) => filter(date)} />
+						</div>
 					</div>
 				</div>
 			</section>
@@ -278,7 +304,7 @@ const DispatchNotePage = () => {
 											</tr>
 										</thead>
 										<tbody>
-											{dispatchNotes.map((note) => (
+											{filteredDispatchNotes.map((note) => (
 												<tr
 													key={note._id}
 													data-toggle="modal"
@@ -287,7 +313,7 @@ const DispatchNotePage = () => {
 												>
 													<td>{note.creator}</td>
 													<td>{note.receiver}</td>
-													<td>{note.createdAt}</td>
+													<td>{convertTimestamp(note.createdAt)}</td>
 													<td>{note.note}</td>
 												</tr>
 											))}
@@ -299,20 +325,38 @@ const DispatchNotePage = () => {
 								<div className="modal-dialog">
 									<div className="modal-content">
 										<div className="modal-header">
-											<h4 className="modal-title">Danh sách đồ nhập</h4>
+											<h4 className="modal-title">Danh sách đồ xuất</h4>
 											<button type="button" className="close" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">×</span>
 											</button>
 										</div>
 										<div className="modal-body">
-											{selectedRowData &&
-												selectedRowData.dispatch_list.map((item) => (
-													<div key={item._id}>
-														<p>
-															{item.ingredientName} - {item.amount} {item.unitName}
-														</p>
-													</div>
-												))}
+											<table className="table table-stripped dataTables_filter table-bordered">
+												<thead>
+													<tr>
+														<th>Nguyên liệu</th>
+														<th>Số lượng</th>
+													</tr>
+												</thead>
+												<tbody>
+													{selectedRowData &&
+														selectedRowData.dispatch_list.map(
+															(item, index) => (
+																<tr key={index}>
+																	<td>{item.ingredientName}</td>
+																	<td>
+																		{item.amount} {item.unitName}
+																	</td>
+																</tr>
+															)
+															// <div key={item._id}>
+															// 	<p>
+															// 		{item.ingredientName} - {item.amount} {item.unitName}
+															// 	</p>
+															// </div>
+														)}
+												</tbody>
+											</table>
 										</div>
 										<div className="modal-footer justify-content-between">
 											<button type="button" className="btn btn-danger" data-dismiss="modal">

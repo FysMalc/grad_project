@@ -1,7 +1,6 @@
 const Bill = require('../models/billModel');
 const Meal = require('../models/mealModel');
 const Ingredient = require('../models/ingredientModel');
-const moment = require('moment');
 
 //Get all bills
 const getAllBills = async (req, res) => {

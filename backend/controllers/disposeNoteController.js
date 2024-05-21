@@ -1,6 +1,5 @@
 const DisposeNote = require('../models/disposeNoteModel');
 const mongoose = require('mongoose');
-const moment = require('moment');
 
 //Get all Note
 const getDisposeNotes = async (req, res) => {
@@ -26,7 +25,7 @@ const getDisposeNote = async (req, res) => {
 
 const createDisposeNote = async (req, res) => {
 	const { creator, dispose_list, note } = req.body;
-	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
+	const createdAt = new Date();
 	try {
 		const disposeNote = await DisposeNote.create({ creator, dispose_list, note, createdAt });
 		res.status(200).json(disposeNote);

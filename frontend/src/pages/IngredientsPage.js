@@ -13,6 +13,7 @@ const IngredientsPage = () => {
 	const [filteredIngredients, setFilteredIngredients] = useState([]);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [ingredientId, setIngredientId] = useState('');
+	const [modalError, setModalError] = useState('');
 
 	const [name, setName] = useState('');
 	const [type, setType] = useState('');
@@ -85,6 +86,11 @@ const IngredientsPage = () => {
 		try {
 			const res = await createIngredient(ingredient);
 			if (res.status === 200) resetState();
+			console.log(res.response.data.error);
+			if (res.response.data.error == 'Nguyên liệu đã tồn tại.') {
+				setModalError('Nguyên liệu đã tồn tại.');
+				window.$('#error-modal').modal('show');
+			}
 		} catch (error) {
 			console.error(error);
 		}
@@ -125,9 +131,11 @@ const IngredientsPage = () => {
 
 	const handleDelete = async (event, ingredientId) => {
 		const res = await deleteIngredient(ingredientId);
+		console.log('Đây là res', res);
 		await fetchIngredients();
-		console.log(res);
-		if (res === 'error') {
+
+		if (res.response.data.error === 'Nguyên liệu đang được sử dụng') {
+			setModalError('Nguyên liệu đang được sử dụng');
 			window.$('#error-modal').modal('show');
 		}
 	};
@@ -370,7 +378,7 @@ const IngredientsPage = () => {
 													</button>
 												</div>
 												<div className="modal-body" id="error-modal-body">
-													Nguyên liệu đang được sử dụng
+													{modalError}
 												</div>
 												<div className="modal-footer justify-content-between">
 													<button type="button" className="btn btn-danger" data-dismiss="modal">

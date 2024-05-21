@@ -11,8 +11,12 @@ const getUnit = async (id) => {
 };
 
 const createUnit = async (data) => {
-	const res = await axios.post(`${process.env.REACT_APP_API_URL}/unit/create`, data);
-	return res;
+	try {
+		const res = await axios.post(`${process.env.REACT_APP_API_URL}/unit/create`, data);
+		return res;
+	} catch (error) {
+		return error;
+	}
 };
 
 const deleteUnit = async (id, access_token) => {
@@ -24,8 +28,7 @@ const deleteUnit = async (id, access_token) => {
 		});
 		return res;
 	} catch (error) {
-		console.log(error.response.data.msg);
-		return 'error';
+		return error;
 	}
 };
 

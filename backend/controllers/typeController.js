@@ -27,7 +27,11 @@ const getType = async (req, res) => {
 // CREATE type
 const createType = async (req, res) => {
 	const { name } = req.body;
-
+	const nameRegex = new RegExp(`^${name}$`, 'i');
+	const type = await Type.findOne({ name: nameRegex });
+	if (type) {
+		return res.status(500).json({ error: 'Loại nguyên liệu đã tồn tại' });
+	}
 	// add doc to db
 	try {
 		const type = await Type.create({ name });
@@ -41,17 +45,17 @@ const createType = async (req, res) => {
 const deleteType = async (req, res) => {
 	const { id } = req.params;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(400).json({ msg: 'ID không hợp lệ' });
+		return res.status(400).json({ error: 'ID không hợp lệ' });
 	}
 
 	const ingredientUsingType = await Ingredient.findOne({ type: id });
 	if (ingredientUsingType !== null) {
-		return res.status(400).json({ msg: 'Loại nguyên liệu đang được sử dụng' });
+		return res.status(400).json({ error: 'Loại nguyên liệu đang được sử dụng' });
 	}
 
 	const type = await Type.findByIdAndDelete(id);
 
-	if (!type) return res.status(404).json({ msg: 'Loại nguyên liệu không tồn tại' });
+	if (!type) return res.status(404).json({ error: 'Loại nguyên liệu không tồn tại' });
 	res.status(200).json(type);
 };
 

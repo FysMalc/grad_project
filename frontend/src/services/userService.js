@@ -8,8 +8,12 @@ const loginUser = async (data) => {
 };
 
 const signupUser = async (data) => {
-	const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/signup`, data);
-	return res.data;
+	try {
+		const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/signup`, data);
+		return res.data;
+	} catch (error) {
+		return error;
+	}
 };
 
 const logoutUser = async () => {

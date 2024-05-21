@@ -1,6 +1,5 @@
 const purchaseNote = require('../models/purchaseNoteModel');
 const mongoose = require('mongoose');
-const moment = require('moment');
 
 //Get all Note
 const getPurchaseNotes = async (req, res) => {
@@ -27,7 +26,7 @@ const getPurchaseNote = async (req, res) => {
 
 const createPurchaseNote = async (req, res) => {
 	const { creator, receiver, purchase_list, note } = req.body;
-	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
+	const createdAt = new Date();
 	try {
 		const purchaseNote = await purchaseNote.create({ creator, receiver, purchase_list, note, createdAt });
 		res.status(200).json(purchaseNote);

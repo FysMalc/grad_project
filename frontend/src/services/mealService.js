@@ -11,8 +11,12 @@ const getMeal = async (id) => {
 };
 
 const createMeal = async (data) => {
-	const res = await axios.post(`${process.env.REACT_APP_API_URL}/meal/create`, data);
-	return res;
+	try {
+		const res = await axios.post(`${process.env.REACT_APP_API_URL}/meal/create`, data);
+		return res;
+	} catch (error) {
+		return error;
+	}
 };
 
 const updateMeal = async (id, data) => {
@@ -21,12 +25,16 @@ const updateMeal = async (id, data) => {
 };
 
 const deleteMeal = async (id, access_token) => {
-	const res = await axios.delete(`${process.env.REACT_APP_API_URL}/meal/delete/${id}`, {
-		headers: {
-			token: `Bearer ${access_token}`,
-		},
-	});
-	return res.data;
+	try {
+		const res = await axios.delete(`${process.env.REACT_APP_API_URL}/meal/delete/${id}`, {
+			headers: {
+				token: `Bearer ${access_token}`,
+			},
+		});
+		return res.data;
+	} catch (error) {
+		return error;
+	}
 };
 
 export { getMeals, getMeal, createMeal, updateMeal, deleteMeal };

@@ -2,15 +2,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { React, useEffect, useState } from 'react';
 
-import $ from 'jquery';
 import DatePicker from 'react-datepicker';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
+import { convertTimestamp } from '../utils/convertTz';
 import { getAllBills } from '../services/billService';
 
 const BillPage = () => {
 	const [bills, setBills] = useState([]);
 	const [selectedRowData, setSelectedRowData] = useState(null);
 	const [startDate, setStartDate] = useState(new Date());
+	const [filteredBills, setFilteredBills] = useState([]);
 
 	const fetchBills = async () => {
 		try {
@@ -26,30 +27,33 @@ const BillPage = () => {
 		fetchBills();
 	}, []);
 
-	function convertTimestamp(timestamp) {
-		const date = new Date(timestamp);
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
-		const seconds = date.getSeconds();
-		const day = date.getDate();
-		const month = date.getMonth() + 1; // Months are zero-indexed
-		const year = date.getFullYear();
+	// function padZero(value) {
+	// 	return value.toString().padStart(2, '0');
+	// }
 
-		const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-		const formattedDate = `${padZero(day)}-${padZero(month)}-${year}`;
-
-		return `${formattedTime} ${formattedDate}`;
-	}
-
-	function padZero(value) {
-		return value.toString().padStart(2, '0');
-	}
+	const filter = (date) => {
+		setStartDate(date);
+		if (!date) {
+			setFilteredBills(bills);
+		} else {
+			const filteredBillsByDate = bills.filter((bill) => {
+				const billDate = new Date(bill.createdAt);
+				return (
+					billDate.getDate() === date.getDate() &&
+					billDate.getMonth() === date.getMonth() &&
+					billDate.getFullYear() === date.getFullYear()
+				);
+			});
+			setFilteredBills(filteredBillsByDate);
+		}
+	};
 
 	const logDate = (date) => {
-		setStartDate(date);
 		console.log(date);
-		const newDate = new Date(date);
-		console.log(newDate);
+		const newDate = new Date(date).toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' });
+		try {
+			console.log(date.getDate());
+		} catch (err) {}
 	};
 
 	return (
@@ -67,7 +71,7 @@ const BillPage = () => {
 									{/* ./card-header */}
 									<div className="card-body">
 										<div className="dataTables_wrapper">
-											<table id="dispatch" className="table table-bordered table-hover ">
+											<table id="bill" className="table table-bordered table-hover ">
 												<thead>
 													<tr>
 														<th>Bàn</th>
@@ -76,13 +80,8 @@ const BillPage = () => {
 													</tr>
 												</thead>
 												<tbody>
-													{bills.map((bill) => (
-														<tr
-															key={bill._id}
-															data-toggle="modal"
-															data-target="#modal-default"
-															onClick={(e) => setSelectedRowData(bill)}
-														>
+													{filteredBills.map((bill) => (
+														<tr key={bill._id} onClick={(e) => setSelectedRowData(bill)}>
 															<td>{bill.table}</td>
 															<td>{convertTimestamp(bill.createdAt)}</td>
 															<td>{bill.total.toLocaleString()} đ</td>
@@ -92,68 +91,46 @@ const BillPage = () => {
 											</table>
 										</div>
 									</div>
-									<div className="modal fade" id="modal-default">
-										<div className="modal-dialog">
-											<div className="modal-content">
-												<div className="modal-header">
-													<h4 className="modal-title">Danh sách order</h4>
-													<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">×</span>
-													</button>
-												</div>
-												<div className="modal-body">
-													<table className="table table-stripped dataTables_filter">
-														<thead>
-															<tr>
-																<th>Món ăn</th>
-																<th>Số lượng</th>
 
-																{/* <th>Giá</th>
-														<th></th>
-														<th></th> */}
-															</tr>
-														</thead>
-														<tbody>
-															{selectedRowData &&
-																selectedRowData.orders.map((meal, index) => {
-																	return (
-																		<tr key={index}>
-																			<td>{meal.mealName}</td>
-																			<td>{meal.quantity}</td>
-																			{/* <td>{(meal.price * item.quantity).toLocaleString()} đ</td> */}
-																		</tr>
-																	);
-																})}
-														</tbody>
-													</table>
-													{/* {selectedRowData &&
-												selectedRowData.orders.map((meal, index) => (
-													<div key={index}>
-														<p>
-															{meal.mealName} - {meal.quantity}
-														</p>
-													</div>
-												))} */}
-												</div>
-												<div className="modal-footer justify-content-between">
-													<button type="button" className="btn btn-danger" data-dismiss="modal">
-														Đóng
-													</button>
-												</div>
-											</div>
-											{/* /.modal-content */}
-										</div>
-									</div>
 									{/* /.card-body */}
 								</div>
-								<div id="daterangepicker"></div>
+
 								{/* /.card */}
 							</div>
 						</div>
 					</section>
 				</div>
 				<div className="col-md-6">
-					<DatePicker selected={startDate} onChange={(date) => logDate(date)} />
+					<DatePicker selected={startDate} onChange={(date) => filter(date)} />
+					<div className="card">
+						<div className="card-header">
+							<h3 className="card-title">Danh sách Order</h3>
+						</div>
+						<div className="card-body">
+							<div className="dataTables_wrapper">
+								<table className="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Tên món ăn</th>
+											<th>Số lượng</th>
+										</tr>
+									</thead>
+									<tbody>
+										{selectedRowData &&
+											selectedRowData.orders.map((meal, index) => {
+												return (
+													<tr key={index}>
+														<td>{meal.mealName}</td>
+														<td>{meal.quantity}</td>
+														{/* <td>{(meal.price * item.quantity).toLocaleString()} đ</td> */}
+													</tr>
+												);
+											})}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</>
@@ -161,3 +138,5 @@ const BillPage = () => {
 };
 
 export default BillPage;
+
+//lỗi này ko lo, lỗi do bên database ko nhận IP của máy, phải đc cấp quyền, mai chỉ sau

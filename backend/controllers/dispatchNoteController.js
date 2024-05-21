@@ -1,7 +1,6 @@
 const DispatchNote = require('../models/dispatchNoteModel');
 
 const mongoose = require('mongoose');
-const moment = require('moment');
 
 //Get all Note
 const getDispatchNotes = async (req, res) => {
@@ -24,7 +23,7 @@ const getDispatchNote = async (req, res) => {
 
 const createDispatchNote = async (req, res) => {
 	const { creator, receiver, dispatch_list, note } = req.body;
-	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
+	const createdAt = new Date();
 	try {
 		const mappedDispatchList = dispatch_list.map((item) => ({
 			ingredientName: item.ingredient.name, // Assuming you have a 'name' property in the ingredient document
