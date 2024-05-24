@@ -10,10 +10,10 @@ router.post('/signup', userController.signupUser);
 
 router.post('/log-out', userController.logoutUser);
 
-router.put('/update-user/:id', authUserMiddleWare, userController.updateUser);
+router.put('/update-user/:id', userController.updateUser);
 
-router.delete('/delete-user/:id', authMiddleWare, userController.deleteUser);
+router.delete('/delete-user/:id', userController.deleteUser);
 
-router.get('/getAll', authMiddleWare, userController.getAllUser);
+router.get('/getAll', userController.getAllUser);
 
 module.exports = router;

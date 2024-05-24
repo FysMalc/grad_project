@@ -14,15 +14,15 @@ export const authReducer = (state, action) => {
 };
 
 export const AuthContextProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(authReducer, {
-		refresh_token: null,
-		user: null,
-		isAdmin: null,
-	});
+	const initialState = () => {
+		const user = JSON.parse(localStorage.getItem('user'));
+		return user ? user : { refresh_token: null, user: null, isAdmin: null };
+	};
+
+	const [state, dispatch] = useReducer(authReducer, initialState());
 
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem('user'));
-
 		if (user) {
 			dispatch({ type: 'LOGIN', payload: user });
 		}

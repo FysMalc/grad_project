@@ -28,19 +28,11 @@ const loginUser = async (req, res) => {
 
 //signup
 const signupUser = async (req, res) => {
-	const { username, password } = req.body;
+	const { username, password, isAdmin } = req.body;
 
 	try {
 		const response = await User.signup(username, password);
 		const { user, access_token, refresh_token } = response;
-
-		res.cookie('refresh_token', refresh_token, {
-			expires: 1000,
-			httpOnly: true,
-			secure: false,
-			sameSite: 'strict',
-			path: '/',
-		});
 
 		res.status(200).json({ username, refresh_token });
 	} catch (e) {
@@ -98,7 +90,7 @@ const deleteUser = async (req, res) => {
 
 		return res.status(200).json(response);
 	} catch (e) {
-		return res.stattus(400).json({
+		return res.status(400).json({
 			message: e.message,
 		});
 	}

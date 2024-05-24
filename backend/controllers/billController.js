@@ -53,8 +53,87 @@ const createBill = async (req, res) => {
 	}
 };
 
+const getRevenue = async (req, res) => {
+	const currentYear = new Date().getFullYear();
+	const bills = await Bill.aggregate([
+		{
+			$match: {
+				createdAt: {
+					$gte: new Date(`${currentYear}-01-01`),
+					$lte: new Date(`${currentYear}-12-31`),
+				},
+			},
+		},
+		{
+			$group: {
+				_id: { $month: '$createdAt' },
+				totalRevenue: { $sum: '$total' },
+			},
+		},
+		{
+			$sort: { _id: 1 },
+		},
+	]);
+
+	return res.status(201).json(bills);
+};
+
+const getConsumedIngredient = async (req, res) => {
+	const bills = await Bill.aggregate([
+		{
+			$lookup: {
+				from: 'meals',
+				localField: 'orders.mealName',
+				foreignField: 'name',
+				as: 'mealDetails',
+			},
+		},
+		{
+			$unwind: '$mealDetails',
+		},
+		{
+			$unwind: '$orders',
+		},
+		{
+			$project: {
+				'mealDetails.ingredients': 1,
+				'orders.quantity': 1,
+			},
+		},
+		{
+			$unwind: '$mealDetails.ingredients',
+		},
+		{
+			$lookup: {
+				from: 'ingredients',
+				localField: 'mealDetails.ingredients.ingredient',
+				foreignField: '_id',
+				as: 'ingredientDetails',
+			},
+		},
+		{
+			$unwind: '$ingredientDetails',
+		},
+		{
+			$group: {
+				_id: '$ingredientDetails.name',
+				totalQuantity: { $sum: { $multiply: ['$orders.quantity', '$mealDetails.ingredients.amount'] } },
+			},
+		},
+		{
+			$sort: { totalQuantity: -1 },
+		},
+		{
+			$limit: 10,
+		},
+	]);
+	return res.status(201).json(bills);
+};
+
 module.exports = {
 	getAllBills,
 	getBill,
 	createBill,
+	getRevenue,
+	getConsumedIngredient,
 };

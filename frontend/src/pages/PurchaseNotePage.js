@@ -17,6 +17,7 @@ const PurchaseNotePage = () => {
 	const [cancel, setCancel] = useState(false);
 	const [startDate, setStartDate] = useState(new Date());
 	const [filteredPurchaseNotes, setFilteredPurchaseNotes] = useState([]);
+
 	const fetchIngredients = async () => {
 		try {
 			const response = await getIngredients();
@@ -30,6 +31,7 @@ const PurchaseNotePage = () => {
 		try {
 			const data = await getPurchaseNotes();
 			setPurchaseNotes(data);
+			setFilteredPurchaseNotes(data);
 		} catch (error) {
 			console.log(error);
 		}
@@ -54,9 +56,9 @@ const PurchaseNotePage = () => {
 
 			if (ingredientSelect && amountInput && unitTextField) {
 				const selectedIngredientId = ingredientSelect.value;
-				const amount = amountInput.value;
+				const amount = parseFloat(amountInput.value);
 				const unitId = unitTextField.dataset.unitId; // Get the unit's _id from the data attribute
-
+				console.log(typeof amount, amount);
 				if (selectedIngredientId && amount && unitId) {
 					const selectedIngredient = ingredientsList.find((ingredient) => ingredient._id === selectedIngredientId);
 
@@ -293,7 +295,7 @@ const PurchaseNotePage = () => {
 											</tr>
 										</thead>
 										<tbody>
-											{purchaseNotes.map((note) => (
+											{filteredPurchaseNotes.map((note) => (
 												<tr
 													key={note._id}
 													data-toggle="modal"
@@ -321,7 +323,7 @@ const PurchaseNotePage = () => {
 										</div>
 										<div className="modal-body">
 											{selectedRowData &&
-												selectedRowData.dispatch_list.map((item) => (
+												selectedRowData.purchase_list.map((item) => (
 													<div key={item._id}>
 														<p>
 															{item.ingredient.name} - {item.amount} {item.unit.name}

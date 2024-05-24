@@ -10,4 +10,15 @@ const createBill = async (data) => {
 	return res;
 };
 
-export { getAllBills, createBill };
+const getRevenue = async () => {
+	const res = await axios.get(`${process.env.REACT_APP_API_URL}/bill/getRevenue`);
+
+	return res;
+};
+
+const getConsumedIngredient = async () => {
+	const res = await axios.get(`${process.env.REACT_APP_API_URL}/bill/getConsumedIngredient`);
+	return res;
+};
+
+export { getAllBills, createBill, getRevenue, getConsumedIngredient };

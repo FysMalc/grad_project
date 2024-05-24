@@ -17,7 +17,9 @@ const BillPage = () => {
 		try {
 			const res = await getAllBills();
 			// console.log(res);
+
 			setBills(res.data);
+			setFilteredBills(res.data);
 		} catch (error) {
 			console.log(error);
 		}
@@ -138,5 +140,3 @@ const BillPage = () => {
 };
 
 export default BillPage;
-
-//lỗi này ko lo, lỗi do bên database ko nhận IP của máy, phải đc cấp quyền, mai chỉ sau

@@ -10,10 +10,12 @@ const TablePage = () => {
 	const [selectedTableId, setSelectedTableId] = useState(null);
 	const [orderedFoods, setOrderedFoods] = useState([]);
 	const [tableHasOrders, setTableHasOrders] = useState({});
+
 	const [orderedFoodsPerTable, setOrderedFoodsPerTable] = useState(() => {
 		const storedOrderedFoods = localStorage.getItem('orderedFoodsPerTable');
 		return storedOrderedFoods ? JSON.parse(storedOrderedFoods) : {};
 	});
+
 	const [reservedTables, setReservedTables] = useState(() => {
 		const storedReservedTables = localStorage.getItem('reservedTables');
 		return storedReservedTables ? JSON.parse(storedReservedTables) : {};

@@ -11,6 +11,9 @@ router.get('/getAll', billRouter.getAllBills);
 // Create a new Ingredient
 router.post('/create', billRouter.createBill);
 
+router.get('/getRevenue', billRouter.getRevenue);
+
+router.get('/getConsumedIngredient', billRouter.getConsumedIngredient);
 // DELETE a Ingredient
 // router.delete('/:id', deleteIngredient);
 

@@ -29,7 +29,7 @@ const userSchema = new Schema({
 
 // static signup method
 
-userSchema.statics.signup = async function (username, password) {
+userSchema.statics.signup = async function (username, password, isAdmin) {
 	//validation
 	if (!username || !password) {
 		throw Error('Tất cả ô không được trống');
@@ -47,6 +47,7 @@ userSchema.statics.signup = async function (username, password) {
 	const user = await this.create({
 		username,
 		password: hashedPassword,
+		isAdmin,
 		createdAt: createdAt,
 	});
 
@@ -110,8 +111,10 @@ userSchema.statics.update = async function (id, data) {
 	if (!user) {
 		throw Error('User không tồn tại');
 	}
-
-	const updateUser = await this.findByIdAndUpdate(id, data, { new: true });
+	const salt = await bcrypt.genSalt(10);
+	const hashedPassword = await bcrypt.hash(data.password, salt);
+	data.password = hashedPassword;
+	const updateUser = await this.findByIdAndUpdate(id, data);
 
 	return updateUser;
 };
@@ -124,6 +127,7 @@ userSchema.statics.delete = async function (id) {
 	}
 
 	const deleteUser = await this.findByIdAndDelete(id);
+	return deleteUser;
 };
 
 module.exports = mongoose.model('User', userSchema);

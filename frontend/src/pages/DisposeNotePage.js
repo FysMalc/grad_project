@@ -5,6 +5,7 @@ import { createDisposeNote, getDisposeNotes } from '../services/disposeNoteServi
 
 import DatePicker from 'react-datepicker';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
+import { convertTimestamp } from '../utils/convertTz';
 import { getIngredients } from '../services/ingredientService';
 
 const DisposeNotePage = () => {
@@ -30,6 +31,7 @@ const DisposeNotePage = () => {
 		try {
 			const data = await getDisposeNotes();
 			setDisposeNotes(data);
+			setFilteredDisposeNotes(data);
 		} catch (error) {
 			console.log(error);
 		}
@@ -53,7 +55,7 @@ const DisposeNotePage = () => {
 
 			if (ingredientSelect && amountInput && unitTextField) {
 				const selectedIngredientId = ingredientSelect.value;
-				const amount = amountInput.value;
+				const amount = parseFloat(amountInput.value);
 				const unitId = unitTextField.dataset.unitId; // Get the unit's _id from the data attribute
 
 				if (selectedIngredientId && amount && unitId) {
@@ -290,7 +292,7 @@ const DisposeNotePage = () => {
 											</tr>
 										</thead>
 										<tbody>
-											{disposeNotes.map((note) => (
+											{filteredDisposeNotes.map((note) => (
 												<tr
 													key={note._id}
 													data-toggle="modal"
@@ -298,7 +300,7 @@ const DisposeNotePage = () => {
 													onClick={(e) => setSelectedRowData(note)}
 												>
 													<td>{note.creator}</td>
-													<td>{note.createdAt}</td>
+													<td>{convertTimestamp(note.createdAt)}</td>
 													<td>{note.note}</td>
 												</tr>
 											))}

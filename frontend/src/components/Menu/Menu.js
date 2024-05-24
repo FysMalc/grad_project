@@ -36,7 +36,7 @@ const Menu = ({ history }) => {
 						data-accordion="false"
 					>
 						<li className="nav-item">
-							<Link to="/dashboard" className="nav-link">
+							<Link to="charts" className="nav-link">
 								<i className="nav-icon fas fa-tachometer-alt" /> <p> Dashboard</p>
 							</Link>
 						</li>
@@ -58,7 +58,7 @@ const Menu = ({ history }) => {
 							<>
 								<li className="nav-header">ADMIN</li>
 								<li className="nav-item">
-									<Link to="/user" className="nav-link">
+									<Link to="/users" className="nav-link">
 										<i className="nav-icon fas fa-users" /> <p> Users</p>
 									</Link>
 								</li>

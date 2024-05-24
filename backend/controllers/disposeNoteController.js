@@ -1,6 +1,6 @@
 const DisposeNote = require('../models/disposeNoteModel');
 const mongoose = require('mongoose');
-
+const Ingredient = require('../models/ingredientModel');
 //Get all Note
 const getDisposeNotes = async (req, res) => {
 	const disposeNotes = await DisposeNote.find({})
@@ -28,6 +28,14 @@ const createDisposeNote = async (req, res) => {
 	const createdAt = new Date();
 	try {
 		const disposeNote = await DisposeNote.create({ creator, dispose_list, note, createdAt });
+
+		for (const item of dispose_list) {
+			const ingredient = await Ingredient.findById(item.ingredient._id);
+			if (ingredient) {
+				ingredient.amount -= item.amount;
+				await ingredient.save();
+			}
+		}
 		res.status(200).json(disposeNote);
 	} catch (error) {
 		res.status(400).json({ msg: error.message });
