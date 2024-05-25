@@ -71,27 +71,25 @@ const BillPage = () => {
 										<h3 className="card-title">Danh sách hoá đơn</h3>
 									</div>
 									{/* ./card-header */}
-									<div className="card-body">
-										<div className="dataTables_wrapper">
-											<table id="bill" className="table table-bordered table-hover ">
-												<thead>
-													<tr>
-														<th>Bàn</th>
-														<th>Thời gian</th>
-														<th>Tổng tiền</th>
+									<div className="card-body table-responsive p-0" style={{ height: 600 }}>
+										<table id="bill" className="table  table-hover table-head-fixed ">
+											<thead>
+												<tr>
+													<th>Bàn</th>
+													<th>Thời gian</th>
+													<th>Tổng tiền</th>
+												</tr>
+											</thead>
+											<tbody>
+												{filteredBills.map((bill) => (
+													<tr key={bill._id} onClick={(e) => setSelectedRowData(bill)}>
+														<td>{bill.table}</td>
+														<td>{convertTimestamp(bill.createdAt)}</td>
+														<td>{bill.total.toLocaleString()} đ</td>
 													</tr>
-												</thead>
-												<tbody>
-													{filteredBills.map((bill) => (
-														<tr key={bill._id} onClick={(e) => setSelectedRowData(bill)}>
-															<td>{bill.table}</td>
-															<td>{convertTimestamp(bill.createdAt)}</td>
-															<td>{bill.total.toLocaleString()} đ</td>
-														</tr>
-													))}
-												</tbody>
-											</table>
-										</div>
+												))}
+											</tbody>
+										</table>
 									</div>
 
 									{/* /.card-body */}

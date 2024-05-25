@@ -43,7 +43,6 @@ const Menu = ({ history }) => {
 
 						{!isAdmin && (
 							<>
-								{' '}
 								<li className="nav-header">QUẢN LÝ</li>
 								<li className="nav-item">
 									<Link to="tables" className="nav-link">

@@ -31,6 +31,9 @@ const TablePage = () => {
 	const [voucherDiscount, setVoucherDiscount] = useState(0);
 	const tablesPerRow = 4;
 
+	const [dailyRevenue, setDailyRevenue] = useState(0);
+	const [tablesServed, setTablesServed] = useState(0);
+
 	useEffect(() => {
 		const fetchAvailableFoods = async () => {
 			try {
@@ -53,6 +56,19 @@ const TablePage = () => {
 
 		setTableHasOrders(updatedTableHasOrders);
 	}, [orderedFoodsPerTable]);
+
+	useEffect(() => {
+		const storedDailyRevenue = localStorage.getItem('dailyRevenue');
+		const storedTablesServed = localStorage.getItem('tablesServed');
+
+		if (storedDailyRevenue) {
+			setDailyRevenue(JSON.parse(storedDailyRevenue));
+		}
+
+		if (storedTablesServed) {
+			setTablesServed(JSON.parse(storedTablesServed));
+		}
+	}, []);
 
 	const handleOnClick = (tableId) => {
 		setSelectedTableId(tableId);
@@ -152,6 +168,19 @@ const TablePage = () => {
 			console.log('Dữ liệu trước khi tạo hoá đơn: ', billData);
 			const res = await createBill(billData);
 			console.log('Thông tin hoá đơn đã được tạo: ', res.data);
+
+			const currentTotal = billData.total;
+			setDailyRevenue((prevRevenue) => {
+				localStorage.setItem('dailyRevenue', JSON.stringify(prevRevenue + currentTotal));
+				return prevRevenue + currentTotal;
+			});
+			setTablesServed((prevTablesServed) => {
+				localStorage.setItem('tablesServed', JSON.stringify(prevTablesServed + 1));
+				return prevTablesServed + 1;
+			});
+			console.log(currentTotal);
+			// Store daily revenue and tables served in local storage
+
 			clearOrderDataForTable(selectedTableId);
 			// Xử lý thành công sau khi tạo hóa đơn mới
 		} catch (err) {
@@ -279,7 +308,7 @@ const TablePage = () => {
 								className={`info-box-icon ${isReserved ? 'bg-danger' : hasOrder ? 'bg-success' : 'bg-info'} col-md-6`}
 								onClick={() => handleOnClick(tableId)}
 								data-toggle="modal"
-								data-target="#modal-default"
+								data-target="#table-modal"
 							>
 								<i className="fas fa-receipt"></i>
 							</span>
@@ -353,94 +382,101 @@ const TablePage = () => {
 	return (
 		<>
 			<HeaderContent name={'Danh sách bàn'} />
-			<div className="container-fluid">
-				{renderRows()}
-				<div className="modal fade" id="modal-default">
-					<div className="modal-dialog modal-xl">
-						<div className="modal-content">
-							<div className="modal-header">
-								<h4 className="modal-title">{`Bàn ${selectedTableId}`}</h4>
 
-								<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">×</span>
-								</button>
-							</div>
-							<div className="modal-body row">
-								<div className="oredered-foods col-md-6">
-									<div className="card">
-										<div className="card-header">
-											<h3 className="card-title">Món đã gọi</h3>
-										</div>
-										<div className="card-body p-0">
-											<div className="table-responsive">
-												<table className="table table-stripped">
-													<thead>
-														<tr>
-															<th>Món ăn</th>
-															<th>Số lượng</th>
-															<th>Giá</th>
-															<th></th>
-															<th></th>
-														</tr>
-													</thead>
-													<tbody>
-														{orderedFoods.map((item, index) => {
-															return (
-																<tr key={index}>
-																	<td>{item.name}</td>
-																	<td>{item.quantity}</td>
-																	<td>{(item.price * item.quantity).toLocaleString()} đ</td>
-																	<td>
-																		<button
-																			type="button"
-																			className="btn btn-outline-danger"
-																			onClick={() => handleDecrement(item)}
-																		>
-																			-
-																		</button>
-																	</td>
-																	<td>
-																		<button
-																			type="button"
-																			className="btn btn-outline-primary"
-																			onClick={() => handleIncrement(item)}
-																		>
-																			+
-																		</button>
-																	</td>
-																</tr>
-															);
-														})}
-													</tbody>
-												</table>
+			<section className="content">
+				<div className="container-fluid">
+					<button className="btn btn-outline-primary" data-toggle="modal" data-target="#statistic">
+						Doanh thu
+					</button>
+					{renderRows()}
+					<div className="modal fade" id="table-modal">
+						<div className="modal-dialog modal-xl">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h4 className="modal-title">{`Bàn ${selectedTableId}`}</h4>
+
+									<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+								</div>
+								<div className="modal-body row">
+									<div className="oredered-foods col-md-6">
+										<div className="card">
+											<div className="card-header">
+												<h3 className="card-title">Món đã gọi</h3>
+											</div>
+											<div className="card-body p-0">
+												<div className="table-responsive">
+													<table className="table table-stripped">
+														<thead>
+															<tr>
+																<th>Món ăn</th>
+																<th>Số lượng</th>
+																<th>Giá</th>
+																<th></th>
+																<th></th>
+															</tr>
+														</thead>
+														<tbody>
+															{orderedFoods.map((item, index) => {
+																return (
+																	<tr key={index}>
+																		<td>{item.name}</td>
+																		<td>{item.quantity}</td>
+																		<td>{(item.price * item.quantity).toLocaleString()} đ</td>
+																		<td>
+																			<button
+																				type="button"
+																				className="btn btn-outline-danger"
+																				onClick={() => handleDecrement(item)}
+																			>
+																				-
+																			</button>
+																		</td>
+																		<td>
+																			<button
+																				type="button"
+																				className="btn btn-outline-primary"
+																				onClick={() => handleIncrement(item)}
+																			>
+																				+
+																			</button>
+																		</td>
+																	</tr>
+																);
+															})}
+														</tbody>
+													</table>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div className="available-foods col-md-6">
-									<div className="card">
-										<div className="card-header">
-											<h3 className="card-title">Menu</h3>
+									<div className="available-foods col-md-6">
+										<div className="card">
+											<div className="card-header">
+												<h3 className="card-title">Menu</h3>
+											</div>
+											<div className="card-body p-0">{renderAvailableFoods()}</div>
 										</div>
-										<div className="card-body p-0">{renderAvailableFoods()}</div>
 									</div>
 								</div>
-							</div>
-							<div className="modal-footer justify-content-between">
-								<button type="button" className="btn btn-danger" data-dismiss="modal">
-									Đóng
-								</button>
-								<div>
-									<span>Tổng tiền: {calculateTotalAmountForTable(selectedTableId).toLocaleString()} đ</span>
+								<div className="modal-footer justify-content-between">
+									<button type="button" className="btn btn-danger" data-dismiss="modal">
+										Đóng
+									</button>
+									<div>
+										<span>Tổng tiền: {calculateTotalAmountForTable(selectedTableId).toLocaleString()} đ</span>
+									</div>
+									<button type="button" className="btn btn-primary" onClick={handleFormSubmit} data-dismiss="modal">
+										Đến thanh toán
+									</button>
 								</div>
-								<button type="button" className="btn btn-primary" onClick={handleFormSubmit} data-dismiss="modal">
-									Đến thanh toán
-								</button>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</section>
+
 			<div className="modal fade" id="payment-modal">
 				<div className="modal-dialog modal-xl">
 					<div className="modal-content">
@@ -514,7 +550,8 @@ const TablePage = () => {
 										<p>
 											{(
 												calculateTotalAmountForTable(selectedTableId) +
-												(calculateTotalAmountForTable(selectedTableId) * serviceFeePercentage) / 100
+												(calculateTotalAmountForTable(selectedTableId) * serviceFeePercentage) / 100 -
+												(calculateTotalAmountForTable(selectedTableId) * voucherDiscount) / 100
 											).toLocaleString()}{' '}
 											đ
 										</p>
@@ -533,6 +570,27 @@ const TablePage = () => {
 							</button>
 							<button type="button" className="btn btn-primary" onClick={(e) => handlePayment()} data-dismiss="modal">
 								Thanh toán
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="modal fade" id="statistic">
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h5 className="modal-title">Doanh thu trong ca</h5>
+							<button type="button" className="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div className="modal-body">
+							<p>Doanh thu: {dailyRevenue.toLocaleString()} đ</p>
+							<p>Tổng hoá đơn: {tablesServed}</p>
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="btn btn-secondary" data-dismiss="modal">
+								Close
 							</button>
 						</div>
 					</div>

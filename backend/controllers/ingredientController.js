@@ -90,7 +90,7 @@ const updateIngredient = async (req, res) => {
 		return res.status(404).json({ msg: 'Nguyên liệu không tồn tại' });
 	}
 
-	res.status(200).json(Ingredient);
+	res.status(200).json(ingredient);
 };
 
 module.exports = {
