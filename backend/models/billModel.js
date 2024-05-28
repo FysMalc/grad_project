@@ -20,7 +20,7 @@ const billSchema = new Schema({
 		type: Number,
 		required: true,
 	},
-
+	staffName: { type: String },
 	createdAt: {
 		type: Date,
 		required: true,

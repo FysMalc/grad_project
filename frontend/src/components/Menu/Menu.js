@@ -23,7 +23,7 @@ const Menu = ({ history }) => {
 					</div>
 					<div className="info">
 						<Link to="/profile" className="d-block">
-							{user.username}
+							{user.staffName}
 						</Link>
 					</div>
 				</div>

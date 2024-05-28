@@ -20,7 +20,8 @@ const loginUser = async (req, res) => {
 		});
 
 		const admin = user.isAdmin;
-		res.status(200).json({ username, refresh_token, admin });
+		const staffName = user.staffName;
+		res.status(200).json({ username, refresh_token, staffName, admin });
 	} catch (e) {
 		res.status(400).json({ message: e.message });
 	}
@@ -28,10 +29,10 @@ const loginUser = async (req, res) => {
 
 //signup
 const signupUser = async (req, res) => {
-	const { username, password, isAdmin } = req.body;
+	const { username, password, staffName, isAdmin } = req.body;
 
 	try {
-		const response = await User.signup(username, password);
+		const response = await User.signup(username, password, staffName, isAdmin);
 		const { user, access_token, refresh_token } = response;
 
 		res.status(200).json({ username, refresh_token });

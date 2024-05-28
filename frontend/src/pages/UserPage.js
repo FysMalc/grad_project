@@ -7,6 +7,7 @@ const UserPage = () => {
 	const [userList, setUserList] = useState([]);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [staffName, setStaffName] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
 
 	const [searchQuery, setSearchQuery] = useState('');
@@ -40,11 +41,12 @@ const UserPage = () => {
 	const resetState = () => {
 		setUsername('');
 		setPassword('');
+		setStaffName('');
 		setIsEditing(false);
 	};
 
 	const handleSubmit = async (e) => {
-		const account = { username, password, isAdmin };
+		const account = { username, password, staffName, isAdmin };
 		console.log(account);
 
 		try {
@@ -77,6 +79,7 @@ const UserPage = () => {
 		setUsername(user.username);
 		setPassword(user.password);
 		setIsAdmin(user.isAdmin);
+		setStaffName(user.staffName);
 		setEditingUser(user);
 		setIsEditing(true);
 	};
@@ -104,7 +107,7 @@ const UserPage = () => {
 								</div>
 								<div className="card-body">
 									<div className="form-group">
-										<label htmlFor="user-name">Tên người dùng</label>
+										<label htmlFor="user-name">Tên đăng nhập</label>
 										<input
 											type="text"
 											className="form-control"
@@ -123,6 +126,17 @@ const UserPage = () => {
 											placeholder="Mật khẩu"
 											onChange={(e) => setPassword(e.target.value)}
 											value={password}
+										/>
+									</div>
+									<div className="form-group">
+										<label htmlFor="user-name">Tên người dùng</label>
+										<input
+											type="text"
+											className="form-control"
+											id="user-name"
+											placeholder="Tên người dùng"
+											onChange={(e) => setStaffName(e.target.value)}
+											value={staffName}
 										/>
 									</div>
 									<div className="form-group">
@@ -182,6 +196,7 @@ const UserPage = () => {
 									<table className="table table-hover text-nowrap">
 										<thead>
 											<tr>
+												<th>Tên dăng nhập</th>
 												<th>Tên người dùng</th>
 												<th>Quyền</th>
 												<th></th>
@@ -191,6 +206,7 @@ const UserPage = () => {
 											{filteredUserList.map((user) => (
 												<tr key={user._id}>
 													<td>{user.username}</td>
+													<td>{user.staffName}</td>
 													<td>{user.isAdmin ? 'Admin' : 'User'}</td>
 													<td>
 														<button className="btn btn-outline-primary" onClick={() => handleUpdate(user)}>

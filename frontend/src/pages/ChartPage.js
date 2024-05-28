@@ -69,14 +69,14 @@ const RevenueBarChart = () => {
 			<HeaderContent name={'Thống kê'} />
 			<section className="content">
 				<div className="container-fluid">
-					<div className="card card-success card-outline" style={{ width: 1050 }}>
+					<div className="card card-success card-outline" style={{ width: 1200 }}>
 						<div className="card-header">
 							<h3 className="card-title">Thống kê doanh thu theo tháng</h3>
 						</div>
 						<div className="card-body">
 							<div className="chart">
 								<div className="chartjs-size-monitor">
-									<BarChart width={1000} height={400} data={data}>
+									<BarChart width={1100} height={400} data={data} style={{ float: 'right' }}>
 										<XAxis dataKey="month" />
 										<YAxis domain={[0, 'auto']} />
 										<Tooltip

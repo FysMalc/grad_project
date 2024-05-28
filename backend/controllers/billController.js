@@ -17,7 +17,7 @@ const getBill = async (req, res) => {
 
 const createBill = async (req, res) => {
 	try {
-		const { table, orders, ordersCost, serviceFee, voucher, total } = req.body;
+		const { table, orders, ordersCost, serviceFee, voucher, total, staffName } = req.body;
 		// const date = new Date();
 		// const now = new Date(date.getTime() + 7 * 60 * 60 * 1000);
 		const now = new Date();
@@ -31,6 +31,7 @@ const createBill = async (req, res) => {
 			serviceFee,
 			voucher,
 			total,
+			staffName,
 			createdAt: now,
 		});
 

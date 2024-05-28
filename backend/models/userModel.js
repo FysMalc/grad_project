@@ -16,9 +16,13 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	staffName: {
+		type: String,
+		required: true,
+	},
 	isAdmin: {
 		type: Boolean,
-		default: false,
+
 		required: true,
 	},
 	createdAt: {
@@ -29,9 +33,9 @@ const userSchema = new Schema({
 
 // static signup method
 
-userSchema.statics.signup = async function (username, password, isAdmin) {
+userSchema.statics.signup = async function (username, password, staffName, isAdmin) {
 	//validation
-	if (!username || !password) {
+	if (!username || !password || !staffName) {
 		throw Error('Tất cả ô không được trống');
 	}
 
@@ -47,6 +51,7 @@ userSchema.statics.signup = async function (username, password, isAdmin) {
 	const user = await this.create({
 		username,
 		password: hashedPassword,
+		staffName,
 		isAdmin,
 		createdAt: createdAt,
 	});

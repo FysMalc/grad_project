@@ -78,6 +78,7 @@ const BillPage = () => {
 													<th>Bàn</th>
 													<th>Thời gian</th>
 													<th>Tổng tiền</th>
+													<th>Thu ngân</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -86,6 +87,7 @@ const BillPage = () => {
 														<td>{bill.table}</td>
 														<td>{convertTimestamp(bill.createdAt)}</td>
 														<td>{bill.total.toLocaleString()} đ</td>
+														<td>{bill.staffName}</td>
 													</tr>
 												))}
 											</tbody>

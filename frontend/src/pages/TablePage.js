@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
 import { createBill } from '../services/billService.js';
 import { getMeals } from '../services/mealService.js';
+import { useAuthContext } from '../hooks/useAuthContext.js';
 
 const TablePage = () => {
+	const user = useAuthContext();
 	const [availableFoods, setAvailableFoods] = useState([]);
 
 	const [selectedTableId, setSelectedTableId] = useState(null);
@@ -163,6 +165,7 @@ const TablePage = () => {
 					calculateTotalAmountForTable(selectedTableId) +
 					(calculateTotalAmountForTable(selectedTableId) * serviceFeePercentage) / 100 -
 					voucherDiscount,
+				staffName: user.staffName,
 			};
 
 			console.log('Dữ liệu trước khi tạo hoá đơn: ', billData);
