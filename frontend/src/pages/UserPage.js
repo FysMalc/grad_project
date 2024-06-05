@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { deleteUser, getAllUser, signupUser, updateUser } from '../services/userService';
 
 import HeaderContent from '../components/HeaderContent/HeaderContent';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const UserPage = () => {
+	const user = useAuthContext();
+
 	const [userList, setUserList] = useState([]);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -51,14 +54,14 @@ const UserPage = () => {
 
 		try {
 			if (isEditing) {
-				const res = await updateUser(editingUser._id, account);
+				const res = await updateUser(editingUser._id, account, user.refresh_token);
 				if (res.status === 200) {
 					console.log(res.data);
 					resetState();
 					fetchUserList();
 				}
 			} else {
-				const res = await signupUser(account);
+				const res = await signupUser(account, user.refresh_token);
 				if (res.status === 200) {
 					console.log(res.data);
 					resetState();
@@ -84,7 +87,7 @@ const UserPage = () => {
 		setIsEditing(true);
 	};
 	const handleDelete = async (event, userId) => {
-		const res = await deleteUser(userId);
+		const res = await deleteUser(userId, user.refresh_token);
 		fetchUserList();
 	};
 	const handleSave = () => {
@@ -107,12 +110,12 @@ const UserPage = () => {
 								</div>
 								<div className="card-body">
 									<div className="form-group">
-										<label htmlFor="user-name">Tên đăng nhập</label>
+										<label htmlFor="username">Tên đăng nhập</label>
 										<input
 											type="text"
 											className="form-control"
-											id="user-name"
-											placeholder="Tên người dùng"
+											id="username"
+											placeholder="Tên đăng nhập"
 											onChange={(e) => setUsername(e.target.value)}
 											value={username}
 										/>
@@ -229,39 +232,39 @@ const UserPage = () => {
 												</tr>
 											))}
 										</tbody>
-										<div className="modal fade" id="modal-default">
-											<div className="modal-dialog">
-												<div className="modal-content">
-													<div className="modal-header">
-														<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
-														<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-															<span aria-hidden="true">×</span>
-														</button>
-													</div>
-													<div className="modal-body">
-														<p>Bạn có muốn xoá {name}?</p>
-													</div>
-													<div className="modal-footer justify-content-between">
-														<button type="button" className="btn btn-danger" data-dismiss="modal">
-															huỷ
-														</button>
-														<button
-															type="button"
-															className="btn btn-primary"
-															onClick={(event) => handleDelete(event, userId)}
-															data-dismiss="modal"
-
-															// data-toggle="modal"
-															// data-target="#error-modal"
-														>
-															Tiếp tục
-														</button>
-													</div>
-												</div>
-												{/* /.modal-content */}
-											</div>
-										</div>
 									</table>
+									<div className="modal fade" id="modal-default">
+										<div className="modal-dialog">
+											<div className="modal-content">
+												<div className="modal-header">
+													<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+													<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">×</span>
+													</button>
+												</div>
+												<div className="modal-body">
+													<p>Bạn có muốn xoá {name}?</p>
+												</div>
+												<div className="modal-footer justify-content-between">
+													<button type="button" className="btn btn-danger" data-dismiss="modal">
+														huỷ
+													</button>
+													<button
+														type="button"
+														className="btn btn-primary"
+														onClick={(event) => handleDelete(event, userId)}
+														data-dismiss="modal"
+
+														// data-toggle="modal"
+														// data-target="#error-modal"
+													>
+														Tiếp tục
+													</button>
+												</div>
+											</div>
+											{/* /.modal-content */}
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

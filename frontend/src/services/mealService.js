@@ -20,15 +20,19 @@ const createMeal = async (data) => {
 };
 
 const updateMeal = async (id, data) => {
-	const res = await axios.patch(`${process.env.REACT_APP_API_URL}/meal/update/${id}`, data);
-	return res;
+	try {
+		const res = await axios.patch(`${process.env.REACT_APP_API_URL}/meal/update/${id}`, data);
+		return res;
+	} catch (error) {
+		return error;
+	}
 };
 
 const deleteMeal = async (id, access_token) => {
 	try {
 		const res = await axios.delete(`${process.env.REACT_APP_API_URL}/meal/delete/${id}`, {
 			headers: {
-				token: `Bearer ${access_token}`,
+				authorization: `Bearer ${access_token}`,
 			},
 		});
 		return res.data;

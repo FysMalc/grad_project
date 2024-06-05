@@ -13,10 +13,12 @@ const MealsPage = () => {
 	const [name, setName] = useState('');
 	const [ingredientsList, setIngredientsList] = useState([]);
 	const [ingredients, setIngredients] = useState([]);
-	const [price, setPrice] = useState(null);
+	const [price, setPrice] = useState(0);
 	const [check, setCheck] = useState(false);
 	const [cancel, setCancel] = useState(false);
 	const [errorModal, setErrorModal] = useState('');
+	const [firstPrice, setFirstPrice] = useState(0);
+	const [discount, setDiscount] = useState(0);
 
 	const fetchMeals = async () => {
 		try {
@@ -81,7 +83,7 @@ const MealsPage = () => {
 			}
 		}
 
-		const meal = { name, ingredients, price };
+		const meal = { name, ingredients, firstPrice, price };
 		console.log(meal);
 		resetState();
 		try {
@@ -99,18 +101,52 @@ const MealsPage = () => {
 
 	const handleSave = async (e) => {
 		e.preventDefault();
-		const meal = { name, ingredientsList, price };
+
+		const ingredientRows = document.getElementsByClassName('ingredientRow');
+		const ingredients = [];
+
+		for (let i = 0; i < ingredientRows.length; i++) {
+			const row = ingredientRows[i];
+			const ingredientSelect = row.querySelector('select');
+			const amountInput = row.querySelector('input[type="number"]');
+			const unitTextField = row.querySelector('input[type="text"]');
+
+			if (ingredientSelect && amountInput && unitTextField) {
+				const selectedIngredientId = ingredientSelect.value;
+				const amount = amountInput.value;
+				const unitId = unitTextField.dataset.unitId; // Get the unit's _id from the data attribute
+
+				if (selectedIngredientId && amount && unitId) {
+					const selectedIngredient = ingredientsList.find((ingredient) => ingredient._id === selectedIngredientId);
+
+					const ingredient = {
+						ingredient: selectedIngredient,
+						amount,
+						unit: unitId, // Use the unit's _id instead of the name
+					};
+					ingredients.push(ingredient);
+				}
+			}
+		}
+
+		const meal = { name, ingredients, firstPrice, price };
+		console.log(meal);
+		resetState();
 		try {
 			const res = await updateMeal(mealToEdit._id, meal);
 			if (res.status === 200) resetState();
+			if (res.response.data.error) {
+				setErrorModal(res.response.data.error);
+				window.$('#error-modal').modal();
+			}
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
+		fetchMeals();
 
 		setMealToEdit(null);
 		setCheck(false);
 		resetState();
-		fetchMeals();
 	};
 
 	const handleCancel = (e) => {
@@ -124,7 +160,9 @@ const MealsPage = () => {
 
 	const resetState = () => {
 		setName('');
-		setPrice('');
+		setPrice(0);
+		setFirstPrice(0);
+		setDiscount(0);
 		const ingredientContainer = document.getElementById('ingredientContainer');
 		const ingredientRows = ingredientContainer.getElementsByClassName('ingredientRow');
 		while (ingredientRows.length > 0) {
@@ -136,12 +174,37 @@ const MealsPage = () => {
 		setSearchQuery(event.target.value);
 	};
 
+	// const handleEdit = (event, mealId) => {
+	// 	const mealToEdit = meals.find((meal) => meal._id === mealId);
+
+	// 	setMealToEdit(mealToEdit);
+	// 	setName(mealToEdit.name);
+	// 	setIngredientsList(mealToEdit.ingredients);
+	// 	setPrice(mealToEdit.price);
+	// 	setCheck(true);
+	// };
+
 	const handleEdit = (event, mealId) => {
 		const mealToEdit = meals.find((meal) => meal._id === mealId);
+		console.log(mealToEdit);
 		setMealToEdit(mealToEdit);
 		setName(mealToEdit.name);
-		setIngredientsList(mealToEdit.ingredients);
 		setPrice(mealToEdit.price);
+		setFirstPrice(mealToEdit.firstPrice);
+		// setDiscount(mealToE);
+
+		// Clear the existing ingredient rows
+		const ingredientContainer = document.getElementById('ingredientContainer');
+		const ingredientRows = ingredientContainer.getElementsByClassName('ingredientRow');
+		while (ingredientRows.length > 0) {
+			ingredientContainer.removeChild(ingredientRows[0]);
+		}
+
+		// Add ingredient rows based on mealToEdit.ingredients
+		mealToEdit.ingredients.forEach((ingredient) => {
+			addIngredientRowEdit(ingredient.ingredient, ingredient.amount, ingredient.unit);
+		});
+
 		setCheck(true);
 	};
 
@@ -193,6 +256,74 @@ const MealsPage = () => {
 		unitTextField.className = 'form-control mr-2';
 		unitTextField.placeholder = 'Đơn vị';
 		unitTextField.readOnly = true; // Make the text field read-only
+
+		// Add an event listener to the ingredient select
+		newIngredientSelect.addEventListener('change', () => {
+			const selectedIngredientId = newIngredientSelect.value;
+			const selectedIngredient = ingredientsList.find((ingredient) => ingredient._id === selectedIngredientId);
+
+			if (selectedIngredient) {
+				unitTextField.value = selectedIngredient.unit.name;
+				unitTextField.dataset.unitId = selectedIngredient.unit._id; // Set the unit's _id as a data attribute
+			} else {
+				unitTextField.value = '';
+				delete unitTextField.dataset.unitId; // Remove the data attribute
+			}
+		});
+
+		// Create a delete button
+		const deleteButton = document.createElement('button');
+		deleteButton.className = 'btn btn-danger';
+		deleteButton.textContent = 'Xoá';
+		deleteButton.onclick = () => {
+			ingredientContainer.removeChild(newIngredientRow);
+		};
+
+		// Append the fields and delete button to the new div
+		newIngredientRow.appendChild(newIngredientSelect);
+		newIngredientRow.appendChild(amountInput);
+		newIngredientRow.appendChild(unitTextField);
+		newIngredientRow.appendChild(deleteButton);
+
+		// Append the new div to the ingredientContainer
+		ingredientContainer.appendChild(newIngredientRow);
+	};
+
+	const addIngredientRowEdit = (selectedIngredient, amount, unit) => {
+		const ingredientContainer = document.getElementById('ingredientContainer');
+
+		// Create a new div to hold the new fields
+		const newIngredientRow = document.createElement('div');
+		newIngredientRow.className = 'ingredientRow d-flex align-items-center mb-2';
+
+		// Create a new select element for ingredients
+		const newIngredientSelect = document.createElement('select');
+		newIngredientSelect.className = 'form-control mr-2';
+
+		// Populate the new select element with options from the ingredientsList
+		ingredientsList.forEach((ingredient) => {
+			const option = document.createElement('option');
+			option.value = ingredient._id;
+			option.text = ingredient.name;
+			option.selected = selectedIngredient?._id === ingredient._id; // Select the option if it matches the selected ingredient
+			newIngredientSelect.add(option);
+		});
+
+		// Create an input field for the amount
+		const amountInput = document.createElement('input');
+		amountInput.type = 'number';
+		amountInput.className = 'form-control mr-2';
+		amountInput.placeholder = 'Số lượng';
+		amountInput.value = amount; // Set the value to the amount
+
+		// Create a text field for the unit
+		const unitTextField = document.createElement('input');
+		unitTextField.type = 'text';
+		unitTextField.className = 'form-control mr-2';
+		unitTextField.placeholder = 'Đơn vị';
+		unitTextField.readOnly = true; // Make the text field read-only
+		unitTextField.value = unit.name; // Set the value to the unit name
+		unitTextField.dataset.unitId = unit._id; // Set the unit's _id as a data attribute
 
 		// Add an event listener to the ingredient select
 		newIngredientSelect.addEventListener('change', () => {
@@ -298,6 +429,38 @@ const MealsPage = () => {
 										+ Thêm nguyên liệu
 									</button>
 									<div className="form-group">
+										<label htmlFor="meal-type">Giá gốc</label>
+										<input
+											type="number"
+											className="form-control"
+											id="first-price"
+											placeholder="Giá"
+											onChange={(e) => {
+												setFirstPrice(e.target.value);
+												setPrice(e.target.value - (discount * e.target.value) / 100);
+												if (e.target.value.length !== 0) setCancel(true);
+												else setCancel(false);
+											}}
+											value={firstPrice}
+										/>
+									</div>
+									<div className="form-group">
+										<label htmlFor="meal-type">Giảm giá</label>
+										<input
+											type="number"
+											className="form-control"
+											id="discount"
+											placeholder="Giá"
+											onChange={(e) => {
+												setDiscount(e.target.value);
+												setPrice((firstPrice - (firstPrice * e.target.value) / 100).toFixed(0));
+												if (e.target.value.length !== 0) setCancel(true);
+												else setCancel(false);
+											}}
+											value={discount}
+										/>
+									</div>
+									<div className="form-group">
 										<label htmlFor="meal-type">Giá</label>
 										<input
 											type="text"
@@ -309,7 +472,8 @@ const MealsPage = () => {
 												if (e.target.value.length !== 0) setCancel(true);
 												else setCancel(false);
 											}}
-											value={mealToEdit ? mealToEdit.price : price}
+											value={price}
+											readOnly
 										/>
 									</div>
 								</div>
@@ -344,11 +508,11 @@ const MealsPage = () => {
 									)}
 									{check && (
 										<div>
-											<button className="btn btn-primary" onClick={handleCancel} style={{ float: 'right' }}>
-												Cancel
+											<button className="btn btn-danger" onClick={handleCancel} style={{ float: 'right' }}>
+												Huỷ
 											</button>
 											<button className="btn btn-primary" onClick={handleSave}>
-												Save
+												Lưu
 											</button>
 										</div>
 									)}
@@ -397,8 +561,8 @@ const MealsPage = () => {
 													<td>{meal.price.toLocaleString()} đ</td>
 													<td>{meal.createdAt}</td>
 													<td>
-														{meal.ingredients.map((ingredient) => (
-															<p key={ingredient.ingredient._id}>
+														{meal.ingredients.map((ingredient, index) => (
+															<p key={index}>
 																- {ingredient.ingredient.name} {ingredient.amount} {ingredient.unit.name}
 															</p>
 														))}
@@ -421,7 +585,7 @@ const MealsPage = () => {
 															data-toggle="modal"
 															data-target="#modal-default"
 															style={{ float: 'right' }}
-															onClick={(e) => setMealDeleteId(meal._id)}
+															onClick={(e) => setMealDeleteId(meal)}
 														>
 															Xoá
 														</button>
@@ -435,14 +599,14 @@ const MealsPage = () => {
 									<div className="modal-dialog">
 										<div className="modal-content">
 											<div className="modal-header">
-												<h4 className="modal-title">Bạn có chắc chắn muốn xoá ?</h4>
+												<h4 className="modal-title">Cảnh báo</h4>
 												<button type="button" className="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true">×</span>
 												</button>
 											</div>
 											<div className="modal-body">
-												<p>Bạn có muốn xoá món ăn này?</p>
-												{mealDeleteId}
+												<p style={{ fontSize: 20 }}>Bạn có chắc chắn muốn xoá {mealDeleteId.name}?</p>
+												{/* {mealDeleteId} */}
 											</div>
 											<div className="modal-footer justify-content-between">
 												<button type="button" className="btn btn-danger" data-dismiss="modal">
@@ -478,7 +642,7 @@ const MealsPage = () => {
 											</div>
 											<div className="modal-footer justify-content-between">
 												<button type="button" className="btn btn-danger" data-dismiss="modal">
-													Close
+													Đóng
 												</button>
 											</div>
 										</div>

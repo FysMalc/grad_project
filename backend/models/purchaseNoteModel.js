@@ -12,15 +12,15 @@ const purchaseNoteSchema = new Schema({
 	},
 	purchase_list: [
 		{
-			ingredient: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'ingredient',
+			ingredientName: {
+				type: String,
+
 				required: true,
 			},
 			amount: { type: Number, required: true },
 			unit: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'unit',
+				type: String,
+
 				required: true,
 			},
 		},

@@ -23,14 +23,9 @@ const mealSchema = new Schema({
 			},
 		},
 	],
-	price: {
-		type: Number,
-		required: true,
-	},
-	createdAt: {
-		type: String,
-		required: true,
-	},
+	firstPrice: { type: Number, required: true },
+	price: { type: Number, required: true },
+	createdAt: { type: String, required: true },
 });
 
 module.exports = mongoose.model('meal', mealSchema);

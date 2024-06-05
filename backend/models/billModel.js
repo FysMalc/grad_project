@@ -11,6 +11,7 @@ const billSchema = new Schema({
 		{
 			mealName: { type: String, required: true },
 			quantity: { type: Number, required: true },
+			price: { type: Number, required: true },
 		},
 	],
 	ordersCost: { type: Number, require: true },

@@ -26,6 +26,7 @@ const createBill = async (req, res) => {
 			orders: orders.map((order) => ({
 				mealName: order.mealName,
 				quantity: order.quantity,
+				price: order.price,
 			})),
 			ordersCost,
 			serviceFee,
@@ -56,18 +57,34 @@ const createBill = async (req, res) => {
 
 const getRevenue = async (req, res) => {
 	const currentYear = new Date().getFullYear();
+	const offsetInHours = 7; // Your timezone offset in hours
+
 	const bills = await Bill.aggregate([
 		{
 			$match: {
 				createdAt: {
-					$gte: new Date(`${currentYear}-01-01`),
-					$lte: new Date(`${currentYear}-12-31`),
+					$gte: new Date(
+						`${currentYear}-01-01T00:00:00.000+00:00` // Start of the year in UTC
+					),
+					$lte: new Date(
+						`${currentYear}-12-31T23:59:59.999+00:00` // End of the year in UTC
+					),
+				},
+			},
+		},
+		{
+			$addFields: {
+				createdAtLocal: {
+					$add: [
+						'$createdAt',
+						{ $multiply: [offsetInHours * 60 * 60 * 1000, 1] }, // Offset in milliseconds
+					],
 				},
 			},
 		},
 		{
 			$group: {
-				_id: { $month: '$createdAt' },
+				_id: { $month: '$createdAtLocal' },
 				totalRevenue: { $sum: '$total' },
 			},
 		},

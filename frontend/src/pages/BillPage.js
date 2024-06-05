@@ -9,7 +9,7 @@ import { getAllBills } from '../services/billService';
 
 const BillPage = () => {
 	const [bills, setBills] = useState([]);
-	const [selectedRowData, setSelectedRowData] = useState(null);
+	const [selectedRowData, setSelectedRowData] = useState('');
 	const [startDate, setStartDate] = useState(new Date());
 	const [filteredBills, setFilteredBills] = useState([]);
 
@@ -106,7 +106,10 @@ const BillPage = () => {
 					<DatePicker selected={startDate} onChange={(date) => filter(date)} />
 					<div className="card">
 						<div className="card-header">
-							<h3 className="card-title">Danh sách Order</h3>
+							<h3 className="card-title">Danh sách Order bàn {selectedRowData.table ? selectedRowData.table : ''}</h3>
+							<h3 className="card-title" style={{ float: 'right' }}>
+								{convertTimestamp(selectedRowData.createdAt)}
+							</h3>
 						</div>
 						<div className="card-body">
 							<div className="dataTables_wrapper">
@@ -115,6 +118,7 @@ const BillPage = () => {
 										<tr>
 											<th>Tên món ăn</th>
 											<th>Số lượng</th>
+											<th>Giá</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -124,13 +128,25 @@ const BillPage = () => {
 													<tr key={index}>
 														<td>{meal.mealName}</td>
 														<td>{meal.quantity}</td>
-														{/* <td>{(meal.price * item.quantity).toLocaleString()} đ</td> */}
+														<td>{(meal.price * meal.quantity).toLocaleString()} đ</td>
 													</tr>
 												);
 											})}
 									</tbody>
 								</table>
 							</div>
+							<tr>
+								<b>Thành tiền: {selectedRowData.ordersCost ? selectedRowData.ordersCost.toLocaleString() : ''} đ</b>
+							</tr>
+							<tr>
+								<b>Phí dịch vụ: {selectedRowData.serviceFee}% </b>
+							</tr>
+							<tr>
+								<b>Voucher: {selectedRowData.voucher}%</b>
+							</tr>
+							<tr>
+								<b>Tổng tiền: {selectedRowData.total ? selectedRowData.total.toLocaleString() : ''} đ</b>
+							</tr>
 						</div>
 					</div>
 				</div>

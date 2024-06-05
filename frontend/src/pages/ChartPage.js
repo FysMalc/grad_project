@@ -4,6 +4,7 @@ import { React, useEffect, useState } from 'react';
 import { getConsumedIngredient, getRevenue } from '../services/billService';
 
 import HeaderContent from '../components/HeaderContent/HeaderContent';
+import { convertTimestamp } from '../utils/convertTz';
 
 const RevenueBarChart = () => {
 	const months = [
@@ -92,14 +93,14 @@ const RevenueBarChart = () => {
 					</div>
 				</div>
 			</section>
-			<PieChart width={800} height={400}>
+			{/* <PieChart width={800} height={400}>
 				<Pie data={ingredient} dataKey="quantity" nameKey="ingredient" cx="50%" cy="50%" outerRadius={120} label>
 					{data.map((entry, index) => (
 						<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 					))}
 				</Pie>
 				<Legend />
-			</PieChart>
+			</PieChart> */}
 		</div>
 	);
 };

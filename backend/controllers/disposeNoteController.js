@@ -3,10 +3,7 @@ const mongoose = require('mongoose');
 const Ingredient = require('../models/ingredientModel');
 //Get all Note
 const getDisposeNotes = async (req, res) => {
-	const disposeNotes = await DisposeNote.find({})
-		.populate('dispose_list.ingredient')
-		.populate('dispose_list.unit')
-		.sort({ createdAt: -1 });
+	const disposeNotes = await DisposeNote.find({}).sort({ createdAt: -1 });
 
 	res.status(200).json(disposeNotes);
 };
@@ -27,10 +24,19 @@ const createDisposeNote = async (req, res) => {
 	const { creator, dispose_list, note } = req.body;
 	const createdAt = new Date();
 	try {
-		const disposeNote = await DisposeNote.create({ creator, dispose_list, note, createdAt });
+		const disposeNote = await DisposeNote.create({
+			creator,
+			dispose_list: dispose_list.map((item) => ({
+				ingredientName: item.ingredientName,
+				amount: item.amount,
+				unit: item.unit,
+			})),
+			note,
+			createdAt,
+		});
 
 		for (const item of dispose_list) {
-			const ingredient = await Ingredient.findById(item.ingredient._id);
+			const ingredient = await Ingredient.findById(item.id);
 			if (ingredient) {
 				ingredient.amount -= item.amount;
 				await ingredient.save();

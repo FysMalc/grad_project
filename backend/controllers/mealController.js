@@ -29,7 +29,7 @@ const getMeal = async (req, res) => {
 };
 
 const createMeal = async (req, res) => {
-	const { name, ingredients, price } = req.body;
+	const { name, ingredients, firstPrice, price } = req.body;
 	const createdAt = moment().format('HH:mm:ss DD-MM-YYYY');
 	const nameRegex = new RegExp(`^${name}$`, 'i');
 	const meal = await Meal.findOne({
@@ -42,7 +42,7 @@ const createMeal = async (req, res) => {
 		});
 	}
 	try {
-		const meal = await Meal.create({ name, ingredients, price, createdAt });
+		const meal = await Meal.create({ name, ingredients, firstPrice, price, createdAt });
 		res.status(200).json(meal);
 	} catch (e) {
 		res.status(400).json({
@@ -73,7 +73,12 @@ const updateMeal = async (req, res) => {
 		return res.status(404).send('ID không hợp lệ!');
 	}
 
-	const meal = await Meal.findByIdAndUpdate(id);
+	const meal = await Meal.findByIdAndUpdate(
+		{
+			_id: id,
+		},
+		{ ...req.body }
+	);
 	if (!meal) {
 		return res.status(404).send('Không tìm thấy món ăn này!');
 	}

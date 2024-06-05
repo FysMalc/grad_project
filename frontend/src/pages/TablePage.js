@@ -157,9 +157,10 @@ const TablePage = () => {
 					mealID: item.id,
 					mealName: item.name,
 					quantity: item.quantity,
+					price: item.price,
 				})),
 				ordersCost: calculateTotalAmountForTable(selectedTableId),
-				serviceFee: (calculateTotalAmountForTable(selectedTableId) * serviceFeePercentage) / 100,
+				serviceFee: serviceFeePercentage,
 				voucher: voucherDiscount,
 				total:
 					calculateTotalAmountForTable(selectedTableId) +
@@ -260,7 +261,8 @@ const TablePage = () => {
 	};
 
 	const handleServiceFeePercentageChange = (event) => {
-		setServiceFeePercentage(parseFloat(event.target.value));
+		if (event.target.value) setServiceFeePercentage(parseFloat(event.target.value));
+		else setServiceFeePercentage(0);
 	};
 
 	const handleVoucherDiscountChange = (event) => {
@@ -289,6 +291,7 @@ const TablePage = () => {
 		const change = amountPaid - grandTotal;
 		return change >= 0 ? change : 0;
 	};
+
 	const renderRows = () => {
 		const rows = [];
 		const totalTables = 40;
@@ -592,8 +595,8 @@ const TablePage = () => {
 							<p>Tổng hoá đơn: {tablesServed}</p>
 						</div>
 						<div className="modal-footer">
-							<button type="button" className="btn btn-secondary" data-dismiss="modal">
-								Close
+							<button type="button" className="btn btn-danger" data-dismiss="modal">
+								Đóng
 							</button>
 						</div>
 					</div>

@@ -328,7 +328,7 @@ const IngredientsPage = () => {
 																	</div>
 																	<div className="modal-body">
 																		<p>Bạn có muốn xoá nguyên liệu này?</p>
-																		{ingredientId}
+																		{/* {ingredientId} */}
 																	</div>
 																	<div className="modal-footer justify-content-between">
 																		<button type="button" className="btn btn-danger" data-dismiss="modal">

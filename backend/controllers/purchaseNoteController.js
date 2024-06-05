@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 
 //Get all Note
 const getPurchaseNotes = async (req, res) => {
-	const purchaseNotes = await PurchaseNote.find({})
-		.populate('purchase_list.ingredient')
-		.populate('purchase_list.unit')
-		.sort({ createdAt: -1 });
+	const purchaseNotes = await PurchaseNote.find({}).sort({ createdAt: -1 });
 
 	res.status(200).json(purchaseNotes);
 };
@@ -28,10 +25,20 @@ const createPurchaseNote = async (req, res) => {
 	const { creator, receiver, purchase_list, note } = req.body;
 	const createdAt = new Date();
 	try {
-		const purchaseNote = await PurchaseNote.create({ creator, receiver, purchase_list, note, createdAt });
+		const purchaseNote = await PurchaseNote.create({
+			creator,
+			receiver,
+			purchase_list: purchase_list.map((item) => ({
+				ingredientName: item.ingredientName,
+				amount: item.amount,
+				unit: item.unit,
+			})),
+			note,
+			createdAt,
+		});
 
 		for (const item of purchase_list) {
-			const ingredient = await Ingredient.findById(item.ingredient._id);
+			const ingredient = await Ingredient.findById(item.id);
 			if (ingredient) {
 				ingredient.amount += item.amount;
 				await ingredient.save();

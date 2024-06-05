@@ -5,6 +5,7 @@ import { createPurchaseNote, getPurchaseNotes } from '../services/purchaseNoteSe
 
 import DatePicker from 'react-datepicker';
 import HeaderContent from '../components/HeaderContent/HeaderContent';
+import { convertTimestamp } from '../utils/convertTz';
 import { getIngredients } from '../services/ingredientService';
 
 const PurchaseNotePage = () => {
@@ -57,15 +58,17 @@ const PurchaseNotePage = () => {
 			if (ingredientSelect && amountInput && unitTextField) {
 				const selectedIngredientId = ingredientSelect.value;
 				const amount = parseFloat(amountInput.value);
+				const unitName = unitTextField.value;
 				const unitId = unitTextField.dataset.unitId; // Get the unit's _id from the data attribute
 				console.log(typeof amount, amount);
 				if (selectedIngredientId && amount && unitId) {
 					const selectedIngredient = ingredientsList.find((ingredient) => ingredient._id === selectedIngredientId);
 
 					const ingredient = {
-						ingredient: selectedIngredient,
+						id: selectedIngredient._id,
+						ingredientName: selectedIngredient.name,
 						amount,
-						unit: unitId, // Use the unit's _id instead of the name
+						unit: unitName, // Use the unit's _id instead of the name
 					};
 					purchase_list.push(ingredient);
 				}
@@ -304,7 +307,7 @@ const PurchaseNotePage = () => {
 												>
 													<td>{note.creator}</td>
 													<td>{note.receiver}</td>
-													<td>{note.createdAt}</td>
+													<td>{convertTimestamp(note.createdAt)}</td>
 													<td>{note.note}</td>
 												</tr>
 											))}
@@ -322,14 +325,25 @@ const PurchaseNotePage = () => {
 											</button>
 										</div>
 										<div className="modal-body">
-											{selectedRowData &&
-												selectedRowData.purchase_list.map((item) => (
-													<div key={item._id}>
-														<p>
-															{item.ingredient.name} - {item.amount} {item.unit.name}
-														</p>
-													</div>
-												))}
+											<table className="table table-bordered table-hover ">
+												<thead>
+													<tr>
+														<th>Tên nguyên liệu</th>
+														<th>Số lượng</th>
+														<th>Đơn vị</th>
+													</tr>
+												</thead>
+												<tbody>
+													{selectedRowData &&
+														selectedRowData.purchase_list.map((item) => (
+															<tr key={item._id}>
+																<td>{item.ingredientName}</td>
+																<td>{item.amount}</td>
+																<td>{item.unit}</td>
+															</tr>
+														))}
+												</tbody>
+											</table>
 										</div>
 										<div className="modal-footer justify-content-between">
 											<button type="button" className="btn btn-danger" data-dismiss="modal">
